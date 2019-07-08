@@ -68,7 +68,7 @@ onmessage= (function() {
         const resultingArray = new Uint8Array(arrayLength);
         let resultingIndex = 0;
         
-        outer: for (let i=0, code=0, lo=0, hi=0; i<strLen; i=i+1|0) {
+        for (let i=0, code=0, lo=0, hi=0; i<strLen; i=i+1|0) {
             code = hexadecimalString.charCodeAt(i)|0;
             if (48 <= code && code <= 57) {
                 hi = code - 48 |0;
@@ -81,6 +81,7 @@ onmessage= (function() {
                 continue;
             }
             for (; i<strLen; i=i+1|0) {
+                code = hexadecimalString.charCodeAt(i)|0;
                 if (48 <= code && code <= 57) {
                     hi <<= 4;
                     lo = code - 48|0;
