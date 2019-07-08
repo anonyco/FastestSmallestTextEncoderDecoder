@@ -100,7 +100,7 @@ onmessage= (function() {
         
         postMessage({
             "type": "hex",
-            "value": TextEncoder_decode(resultingArray)
+            "value": TextDecoder_decode(resultingArray)
         });
     }
     binaryDataString = hexadecimalString = "";
