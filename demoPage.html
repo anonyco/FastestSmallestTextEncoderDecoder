@@ -65,9 +65,9 @@
       hexWorker.addEventListener("message", function(evt) {
           var data = evt && evt.data;
           if (data && data["type"] === "text" && typeof data["value"] === "string") {
-              rawTextElement = "" + data["value"];
+              rawTextElement.value = "" + data["value"];
           } else if (data && data["type"] === "hex" && typeof data["value"] === "string") {
-              hexaDecimalElement = "" + data["value"];
+              hexaDecimalElement.value = "" + data["value"];
           }
       }, {passive: 1});
       
