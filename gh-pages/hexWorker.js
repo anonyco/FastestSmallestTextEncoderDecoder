@@ -6,7 +6,6 @@ onmessage= (function() {
   const Object_prototype_toString = ({}).toString;
   const ArrayBufferString = Object_prototype_toString.call(ArrayBuffer.prototype);
   const setTimeout = self.setTimeout;
-  const postMessage = self.postMessage;
   
   const TextEncoder_encode = (new TextEncoder).encode;
   const TextDecoder_decode = (new TextEncoder).decode;
