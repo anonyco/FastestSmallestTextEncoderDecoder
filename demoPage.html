@@ -10,8 +10,8 @@
     <textarea id="hexaDecimal" class="flex-half-side"></textarea>
   </div>
   <div class="flex-sliced-parent">
-    <center class="flex-half-side"><input type="file" value="Upload File" id="upload-text"/> <input type="file" value="Download Text" id="download-text"/></center>
-    <center class="flex-half-side"><input type="file" value="Upload Hex" id="upload-hex"/> <input type="button" value="Download Hex" id="download-hex"/></center>
+    <center class="flex-half-side"><input type="file" id="upload-text"/><button><label for="upload-text">Upload Text</label></button> <input type="button" value="Download Text" id="download-text"/></center>
+    <center class="flex-half-side"><input type="file" id="upload-hex"/><button><label for="upload-hex">Upload Hex</label></button> <input type="button" value="Download Hex" id="download-hex"/></center>
   </div>
   <style>
     body {
@@ -53,6 +53,10 @@
     textarea.flex-half-side {
       white-space: pre-wrap;
       resize: none!important;
+    }
+    #upload-text, #upload-hex {
+      position: fixed;
+      visibility: hidden;
     }
   </style>
   <script> 
