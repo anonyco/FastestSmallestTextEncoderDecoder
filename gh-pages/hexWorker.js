@@ -102,9 +102,14 @@ onmessage= (function() {
   return function(evt){
       var data = evt.data;
       if (ArrayBufferString === Object_prototype_toString.call(data)) {
+          binaryDataString = hexadecimalString = "";
           currentArrayBuffer = data;
       } else if (data && data["type"] === "text" && typeof data["value"] === "string") {
-          binaryDataString = data.value;
+          hexadecimalString = "";
+          binaryDataString = data["value"];
+      } else if (data && data["type"] === "hex" && typeof data["value"] === "string") {
+          binaryDataString = "";
+          hexadecimalString = data["value"];
       }
       if (!timingOut) {
           setTimeout(convertToOrFromHex, 1);
