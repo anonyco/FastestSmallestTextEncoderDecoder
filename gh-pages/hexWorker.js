@@ -1,6 +1,6 @@
 importScripts("encoderAndDecoderForced.src.js");
 onmessage= (function() {
-  var timingOut = false, binaryDataString="", hexadecimalString="", currentArrayBuffer=null;
+  var timingOut = false, binaryDataString="", hexadecimalString="", currentTextBuffer=null, currentHexBuffer=null;
   
   const Uint8Array = self.Uint8Array;
   const Object_prototype_toString = ({}).toString;
@@ -9,21 +9,30 @@ onmessage= (function() {
   const postMessage = self.postMessage;
   
   const TextEncoder_encode = (new TextEncoder).encode;
-  const TextEncoder_decode = (new TextEncoder).decode;
+  const TextDecoder_decode = (new TextEncoder).decode;
   
   function convertToOrFromHex(){
     timingOut = false;
-    if (currentArrayBuffer !== null) {
-        binaryDataString = TextDecoder_decode(currentArrayBuffer);
+    
+    if (currentHexBuffer !== null) {
+        hexadecimalString = TextDecoder_decode(currentHexBuffer);
+        currentHexBuffer = null;
+        postMessage({
+            "type": "hex",
+            "value": hexadecimalString
+        });
+    }
+    
+    if (currentTextBuffer !== null) {
         postMessage({
             "type": "text",
-            "value": binaryDataString
+            "value": TextDecoder_decode(currentTextBuffer)
         });
         
-        const inputAsU8Array = new Uint8Array(currentArrayBuffer);
+        const inputAsU8Array = new Uint8Array(currentTextBuffer);
         const len = inputAsU8Array.length|0;
         
-        currentArrayBuffer = null; // reset it
+        currentTextBuffer = null; // reset it
         
         let resultingString = "";
         for (let i=0; i<len; i=i+1|0) resultingString += (i === 0 ? "" : " ") + (inputAsU8Array[i]|0).toString(16);
@@ -96,18 +105,25 @@ onmessage= (function() {
         });
     }
     binaryDataString = hexadecimalString = "";
-    currentArrayBuffer = null;
+    currentTextBuffer = currentHexBuffer = null;
   }
   
   return function(evt){
       var data = evt.data;
-      if (ArrayBufferString === Object_prototype_toString.call(data)) {
+      if (data && data["type"] === "text-buffer" && ArrayBufferString === Object_prototype_toString.call(data["value"])) {
           binaryDataString = hexadecimalString = "";
-          currentArrayBuffer = data;
+          currentHexBuffer = null;
+          currentTextBuffer = data["value"];
+      } else if (data && data["type"] === "hex-buffer" && ArrayBufferString === Object_prototype_toString.call(data["value"])) {
+          binaryDataString = hexadecimalString = "";
+          currentHexBuffer = null;
+          currentTextBuffer = data["value"];
       } else if (data && data["type"] === "text" && typeof data["value"] === "string") {
+          currentTextBuffer = currentHexBuffer = null;
           hexadecimalString = "";
           binaryDataString = data["value"];
       } else if (data && data["type"] === "hex" && typeof data["value"] === "string") {
+          currentTextBuffer = currentHexBuffer = null;
           binaryDataString = "";
           hexadecimalString = data["value"];
       }
