@@ -7,7 +7,7 @@
   var Object_prototype_toString = ({}).toString;
   var NativeUint8Array = window.Uint8Array;
   var patchedU8Array = NativeUint8Array || Array;
-  var ArrayBufferString = Object_prototype_toString.call(new (window.ArrayBuffer || patchedU8Array));
+  var ArrayBufferString = Object_prototype_toString.call((window.ArrayBuffer || patchedU8Array).prototype);
   function decoderReplacer(nonAsciiChars){
     // make the UTF string into a binary UTF-8 encoded string
     var point = nonAsciiChars.charCodeAt(0)|0;
