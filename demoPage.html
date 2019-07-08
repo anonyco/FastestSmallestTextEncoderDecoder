@@ -61,6 +61,15 @@
       const hexWorker = new Worker("gh-pages/hexWorker.js");
       const rawTextElement = document.getElementById("rawText");
       const hexaDecimalElement = document.getElementById("hexaDecimal");
+
+      hexWorker.addEventListener("message", function(evt) {
+          var data = evt && evt.data;
+          if (data && data["type"] === "text" && typeof data["value"] === "string") {
+              rawTextElement = "" + data["value"];
+          } else if (data && data["type"] === "hex" && typeof data["value"] === "string") {
+              hexaDecimalElement = "" + data["value"];
+          }
+      }, {passive: 1});
       
       function whenTextChanges() {
           hexWorker.postMessage({
