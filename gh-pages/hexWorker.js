@@ -99,7 +99,7 @@ onmessage= (function() {
         }
         
         postMessage({
-            "type": "hex",
+            "type": "text",
             "value": TextDecoder_decode(resultingArray)
         });
     }
