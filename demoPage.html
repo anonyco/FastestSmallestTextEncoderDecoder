@@ -72,19 +72,27 @@
       }, {passive: 1});
       
       function whenTextChanges() {
-          hexWorker.postMessage({
-              "type": "text",
-              "value": ""+rawTextElement.value
-          });
+          if (rawTextElement.value !== "") {
+              hexWorker.postMessage({
+                  "type": "text",
+                  "value": ""+rawTextElement.value
+              });
+          } else {
+              hexaDecimalElement.value = "";
+          }
       }
       rawTextElement.addEventListener("change", whenTextChanges); // for IE
       rawTextElement.addEventListener("input", whenTextChanges);
       
       function whenHexChanges() {
-          hexWorker.postMessage({
-              "type": "text",
-              "value": ""+hexaDecimalElement.value
-          });
+          if (hexaDecimalElement.value !== "") {
+              hexWorker.postMessage({
+                  "type": "text",
+                  "value": ""+hexaDecimalElement.value
+              });
+          } else {
+              rawTextElement.value = "";
+          }
       };
       hexaDecimalElement.addEventListener("change", whenHexChanges); // for IE
       hexaDecimalElement.addEventListener("input", whenHexChanges);
