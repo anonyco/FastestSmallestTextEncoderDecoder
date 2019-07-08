@@ -8,7 +8,7 @@ onmessage= (function() {
   const setTimeout = self.setTimeout;
   
   const TextEncoder_encode = (new TextEncoder).encode;
-  const TextDecoder_decode = (new TextEncoder).decode;
+  const TextDecoder_decode = (new TextDecoder).decode;
   
   function convertToOrFromHex(){
     timingOut = false;
