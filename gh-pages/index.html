@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head>
-<link rel="preload" as="script" href="gh-pages/encoderAndDecoderForced.src.js" />
-<link rel="preload" as="worker" href="gh-pages/hexWorker.js" />
+<link rel="preload" as="script" href="encoderAndDecoderForced.src.js" />
+<link rel="preload" as="worker" href="hexWorker.js" />
 <title>Fastest Smallest Text Encoder Demo</title>
 </head><body>
   <center><h1>Fastest Smallest Text Encoder Demo</h1></center>
@@ -62,7 +62,7 @@
   <script> 
     (function(window, document){
       "use strict";
-      const hexWorker = new Worker("gh-pages/hexWorker.js");
+      const hexWorker = new Worker("hexWorker.js");
       const rawTextElement = document.getElementById("rawText");
       const hexaDecimalElement = document.getElementById("hexaDecimal");
 
