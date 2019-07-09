@@ -34,7 +34,10 @@ onmessage= (function() {
         currentTextBuffer = null; // reset it
         
         let resultingString = "";
-        for (let i=0; i<len; i=i+1|0) resultingString += (i === 0 ? "" : " ") + (inputAsU8Array[i]|0).toString(16);
+        for (let i=0; i<len; i=i+1|0) resultingString += (
+            (i === 0 ? (inputAsU8Array[i]|0) < 16 ? "0" : "" : (inputAsU8Array[i]|0) < 16 ? " 0" : " ") +
+            (inputAsU8Array[i]|0).toString(16)
+        );
         postMessage({
             "type": "hex",
             "value": resultingString
