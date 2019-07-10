@@ -73,7 +73,7 @@ Thus, in NodeJS, you do not ever have to use `new` just to get the encoder/decod
     // Variation 1
     const {TextEncoder, TextDecoder} = require("EncoderAndDecoderNodeJS.src.js");
     const encode = (new TextEncoder).encode;
-    const decode = (new TextEncoder).decode;
+    const decode = (new TextDecoder).decode;
 ```
 
 ```Javascript
