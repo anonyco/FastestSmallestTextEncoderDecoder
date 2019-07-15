@@ -29,7 +29,7 @@ Alternatively, either use `https://dl.dropboxusercontent.com/s/47481btie8pb95h/F
 
 ## RequireJS and NodeJS
 
-For dropping into either RequireJS or NodeJS, please use [the `fastestsmallesttextencoderdecoder` npm repository](https://npmjs.org/package/fastestsmallesttextencoderdecoder), [this minified file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.min.js), or the corresponding [source code file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.js).
+For dropping into either RequireJS or NodeJS, please use [the `fastestsmallesttextencoderdecoder` npm repository](https://npmjs.org/package/fastestsmallesttextencoderdecoder), [this minified file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.min.js), or the corresponding [source code file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.src.js).
 
 ## Browser Support
 
@@ -56,7 +56,7 @@ Also note that while this polyfill may work in these old browsers, it is very li
 
 Please review the MDN at [`window.TextEncoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder) and [`window.TextDecoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder) for information on how to use TextEncoder and TextDecoder.
 
-As for NodeJS, calling `require("EncoderAndDecoderNodeJS.src.js")` yields the following object:
+As for NodeJS, calling `require("EncoderAndDecoderNodeJS.min.js")` yields the following object:
 
 ```Javascript
 module.exports = {
@@ -71,19 +71,19 @@ Thus, in NodeJS, you do not ever have to use `new` just to get the encoder/decod
 
 ```Javascript
     // Variation 1
-    const {TextEncoder, TextDecoder} = require("EncoderAndDecoderNodeJS.src.js");
+    const {TextEncoder, TextDecoder} = require("EncoderAndDecoderNodeJS.min.js");
     const encode = (new TextEncoder).encode;
     const decode = (new TextDecoder).decode;
 ```
 
 ```Javascript
     // Variation 2
-    const {encode, decode} = require("EncoderAndDecoderNodeJS.src.js");
+    const {encode, decode} = require("EncoderAndDecoderNodeJS.min.js");
 ```
 
 ```Javascript
     // Variation 3
-    const encodeAndDecodeModule = require("EncoderAndDecoderNodeJS.src.js");
+    const encodeAndDecodeModule = require("EncoderAndDecoderNodeJS.min.js");
     const encode = encodeAndDecodeModule.encode;
     const decode = encodeAndDecodeModule.decode;
 ```
