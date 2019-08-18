@@ -49,9 +49,6 @@ Also note that while this polyfill may work in these old browsers, it is very li
 
 
 
-Also note that while this polyfill may work in these old browsers, it is very likely that the rest of your website will not (unless if you make a concious effort about it which I would not reccomend because noone uses or should use these old browsers).
-
-
 ## API Documentation
 
 Please review the MDN at [`window.TextEncoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder) and [`window.TextDecoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder) for information on how to use TextEncoder and TextDecoder.
