@@ -43,7 +43,7 @@ support for TextEncoder/TextDecoder to the following browsers.
 
 Also note that while this polyfill may work in these old browsers, it is very likely that the rest of your website will not (unless if you make a concious effort about it which I would not reccomend because noone uses or should use these old browsers).
 
-\* Partial polyfill means that `Array` (or `ArrayBuffer` in NodeJS) will be used instead of `Uint8Array`/\[*typedarray*\].
+\* Partial polyfill means that `Array` (or `Buffer` in NodeJS) will be used instead of `Uint8Array`/\[*typedarray*\].
 
 \*\* This is the first public release of the browser
 
