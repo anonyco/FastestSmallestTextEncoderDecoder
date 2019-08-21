@@ -19,5 +19,5 @@
     "type" : "git",
     "url" : "https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git"
   },
-  "files": ["NodeJS/EncoderAndDecoderNodeJS.src.js", "aEncoderDecoderTogether.min.js"]
+  "files": ["NodeJS/EncoderAndDecoderNodeJS.src.js", "EncoderDecoderTogether.min.js"]
 }
