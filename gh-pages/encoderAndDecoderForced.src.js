@@ -41,7 +41,7 @@
     var inputAs8 = NativeUint8Array ? new patchedU8Array(buffer) : buffer;
     var resultingString = "";
     for (var index=0,len=inputAs8.length|0; index<len; index=index+32768|0)
-      resultingString += fromCharCode.apply(0, inputAs8[NativeUint8Array ? "slice" : "subarray"](index,index+32768|0));
+      resultingString += fromCharCode.apply(0, inputAs8[NativeUint8Array ? "subarray" : "slice"](index,index+32768|0));
 
     return resultingString.replace(/[\xc0-\xff][\x80-\xbf]*/g, decoderReplacer);
   }
