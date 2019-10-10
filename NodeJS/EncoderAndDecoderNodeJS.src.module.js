@@ -90,8 +90,10 @@ function encode(inputString){
 };
 TextEncoder.prototype["encode"] = encode;
 
-export default Object.freeze({
-  "TextDecoder": TextDecoder,
-  "TextEncoder": TextEncoder
-});
+export default Object.freeze([
+  TextDecoder,
+  TextEncoder,
+  decode,
+  encode
+]);
 
