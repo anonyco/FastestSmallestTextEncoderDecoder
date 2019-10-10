@@ -29,7 +29,11 @@ Alternatively, either use `https://dl.dropboxusercontent.com/s/47481btie8pb95h/F
 
 ## RequireJS and NodeJS
 
-For dropping into either RequireJS or NodeJS, please use [the `fastestsmallesttextencoderdecoder` npm repository](https://npmjs.org/package/fastestsmallesttextencoderdecoder), [this minified file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.min.js), or the corresponding [source code file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.src.js).
+For dropping into either RequireJS or NodeJS, please use [the `fastestsmallesttextencoderdecoder` npm repository](https://npmjs.org/package/fastestsmallesttextencoderdecoder), [this minified file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.min.js), or the corresponding [source code file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.src.js). To install via npm, use the following code,
+
+```Bash
+npm install fastestsmallesttextencoderdecoder
+```
 
 ## Browser Support
 
@@ -68,21 +72,27 @@ Thus, in NodeJS, you do not ever have to use `new` just to get the encoder/decod
 
 ```Javascript
     // Variation 1
-    const {TextEncoder, TextDecoder} = require("EncoderAndDecoderNodeJS.min.js");
+    const {TextEncoder, TextDecoder} = require("fastestsmallesttextencoderdecoder");
     const encode = (new TextEncoder).encode;
     const decode = (new TextDecoder).decode;
 ```
 
 ```Javascript
     // Variation 2
-    const {encode, decode} = require("EncoderAndDecoderNodeJS.min.js");
+    const {encode, decode} = require("fastestsmallesttextencoderdecoder");
 ```
 
 ```Javascript
     // Variation 3
-    const encodeAndDecodeModule = require("EncoderAndDecoderNodeJS.min.js");
+    const encodeAndDecodeModule = require("fastestsmallesttextencoderdecoder");
     const encode = encodeAndDecodeModule.encode;
     const decode = encodeAndDecodeModule.decode;
+```
+
+Note that *fastestsmallesttextencoderdecoder* must be installed via the following snippet in the terminal in order for the `require("fastestsmallesttextencoderdecoder")` to work.
+
+```Bash
+npm install fastestsmallesttextencoderdecoder
 ```
 
 # Demonstration
@@ -91,3 +101,4 @@ Visit the [GithubPage](https://anonyco.github.io/FastestSmallestTextEncoderDecod
 
 ## NPM Project
 You can find this project on [npm here at this link](https://npmjs.org/package/fastestsmallesttextencoderdecoder).
+
