@@ -83,8 +83,30 @@ Thus, in NodeJS, you do not ever have to use `new` just to get the encoder/decod
 ```
 
 ```Javascript
-    // Variation 3
+    // Variation 3 (a rewording of Variation 2)
     const encodeAndDecodeModule = require("fastestsmallesttextencoderdecoder");
+    const encode = encodeAndDecodeModule.encode;
+    const decode = encodeAndDecodeModule.decode;
+```
+
+Or, you can use the new and shiny [ES6 module importation](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/import) statements.
+
+
+```Javascript
+    // Variation 1
+    import {TextEncoder, TextDecoder} from "fastestsmallesttextencoderdecoder";
+    const encode = (new TextEncoder).encode;
+    const decode = (new TextDecoder).decode;
+```
+
+```Javascript
+    // Variation 2
+    import {encode, decode} from "fastestsmallesttextencoderdecoder";
+```
+
+```Javascript
+    // Variation 3 (a rewording of Variation 2)
+    import * as encodeAndDecodeModule from "fastestsmallesttextencoderdecoder";
     const encode = encodeAndDecodeModule.encode;
     const decode = encodeAndDecodeModule.decode;
 ```
@@ -101,4 +123,19 @@ Visit the [GithubPage](https://anonyco.github.io/FastestSmallestTextEncoderDecod
 
 ## NPM Project
 You can find this project on [npm here at this link](https://npmjs.org/package/fastestsmallesttextencoderdecoder).
+
+# Development
+
+Develop the project on your own by cloning it with the following command line.
+
+```Bash
+git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd FastestSmallestTextEncoderDecoder; npm run install-dev
+```
+
+Now that it is cloned, edit the files as you see fit. Now that the files have been edited, run the following in order to build the project.
+
+```Bash
+git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd FastestSmallestTextEncoderDecoder; npm run install-dev
+```
+
 
