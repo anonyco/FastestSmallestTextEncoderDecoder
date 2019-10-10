@@ -135,7 +135,7 @@ git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd F
 Now that it is cloned, edit the files as you see fit. Now that the files have been edited, run the following in order to build the project.
 
 ```Bash
-git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd FastestSmallestTextEncoderDecoder; npm run install-dev
+npm run build
 ```
 
 
