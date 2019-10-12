@@ -36,7 +36,8 @@
       for (; endPos < stringLen; endPos=endPos+1|0) result += "\ufffd"; // replacement character
       return result;
     }
-    function TextDecoder(){};
+    /** @constructor */
+    function TextDecoder(){}
     function decode(inputArrayOrBuffer){
       var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
       var asString = Object_prototype_toString.call(buffer);
@@ -49,7 +50,7 @@
 
       return resultingString.replace(/[\xc0-\xff][\x80-\xbf]*/g, decoderReplacer);
     }
-    TextDecoder.prototype.decode = decode;
+    TextDecoder.prototype["decode"] = decode;
     //////////////////////////////////////////////////////////////////////////////////////
     function encoderReplacer(nonAsciiChars){
       // make the UTF string into a binary UTF-8 encoded string
@@ -79,7 +80,8 @@
         (0x2/*0b10*/<<6) | (point&0x3f/*0b00111111*/)
       );
     }
-    function TextEncoder(){};
+    /** @constructor */
+    function TextEncoder(){}
     function encode(inputString){
       // 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
       // 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
@@ -88,14 +90,14 @@
       for (var i=0; i<len; i=i+1|0)
         result[i] = encodedString.charCodeAt(i)|0;
       return result;
-    };
-    TextEncoder.prototype.encode = encode;
+    }
+    TextEncoder.prototype["encode"] = encode;
     function factory(obj) {
         if (!obj["TextDecoder"]) obj["TextDecoder"] = TextDecoder;
         if (!obj["TextEncoder"]) obj["TextEncoder"] = TextEncoder;
         if (obj !== global) obj["decode"] = decode, obj["encode"] = encode;
         return obj;
-    };
+    }
 
     typeof define == typeof factory && define["amd"] ? define(function(){
         return factory({});

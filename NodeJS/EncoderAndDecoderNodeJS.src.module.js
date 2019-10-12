@@ -12,7 +12,7 @@ var NativeUint8Array = window_global.Uint8Array;
 var usingTypedArrays = NativeUint8Array && (!NativeBuffer || NativeUint8Array.prototype.isPrototypeOf(NativeBuffer));
 var ArrayBufferString = usingTypedArrays && Object_prototype_toString.call(window_global.ArrayBuffer.prototype);
 
-function decoderReplacer(encoded){
+function decoderReplacer(encoded) {
 	var codePoint = encoded.charCodeAt(0) << 24;
 	var leadingOnes = clz32(~codePoint)|0;
 	var endPos = 0, stringLen = encoded.length|0;
@@ -35,7 +35,8 @@ function decoderReplacer(encoded){
 	for (; endPos < stringLen; endPos=endPos+1|0) result += "\ufffd"; // replacement character
 	return result;
 }
-function TextDecoder(){};
+/** @constructor */
+function TextDecoder() {}
 function decode(inputArrayOrBuffer){
 	var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
 	var asString = Object_prototype_toString.call(buffer);
@@ -47,7 +48,7 @@ function decode(inputArrayOrBuffer){
 		resultingString += fromCharCode.apply(0, inputAs8[usingTypedArrays ? "subarray" : "slice"](index,index+32768|0));
 
 	return resultingString.replace(/[\xc0-\xff][\x80-\xbf]*/g, decoderReplacer);
-}
+};
 TextDecoder.prototype["decode"] = decode;
 //////////////////////////////////////////////////////////////////////////////////////
 function encoderReplacer(nonAsciiChars){
@@ -78,7 +79,8 @@ function encoderReplacer(nonAsciiChars){
 		(0x2/*0b10*/<<6) | (point&0x3f/*0b00111111*/)
 	);
 }
-function TextEncoder(){};
+/** @constructor */
+function TextEncoder(){}
 function encode(inputString){
 	// 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
 	// 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
@@ -90,10 +92,10 @@ function encode(inputString){
 };
 TextEncoder.prototype["encode"] = encode;
 
-export default Object.freeze([
-  TextDecoder,
-  TextEncoder,
-  decode,
-  encode
-]);
+window["export_TextDecoder"] = TextDecoder;
+window["export_TextEncoder"] = TextEncoder;
+window["export_decode"] = decode;
+window["export_encode"] = encode;
+
+export default {};
 
