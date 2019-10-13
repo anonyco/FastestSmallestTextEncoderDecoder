@@ -126,7 +126,7 @@ You can find this project on [npm here at this link](https://npmjs.org/package/f
 
 # Development
 
-Develop the project on your own by cloning it with the following command line.
+On linux, you can develop the project on your own by cloning it with the following command line.
 
 ```Bash
 git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd FastestSmallestTextEncoderDecoder; npm run install-dev
@@ -134,7 +134,7 @@ git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd F
 
 Emphasize the `npm run install-dev` which downloads `closure-compiler.jar` into the repository for minifying the files.
 
-Now that the repository is cloned, edit the files as you see fit. Now that the files have been edited, run the following in order to build the project.
+Now that the repository is cloned, edit the files as you see fit. Now that the files have been edited, run the following in the terminal in the root folder of the repository in order to minify the NodeJS JavaScript files.
 
 ```Bash
 npm run build
