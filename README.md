@@ -132,7 +132,9 @@ Develop the project on your own by cloning it with the following command line.
 git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd FastestSmallestTextEncoderDecoder; npm run install-dev
 ```
 
-Now that it is cloned, edit the files as you see fit. Now that the files have been edited, run the following in order to build the project.
+Emphasize the `npm run install-dev` which downloads `closure-compiler.jar` into the repository for minifying the files.
+
+Now that the repository is cloned, edit the files as you see fit. Now that the files have been edited, run the following in order to build the project.
 
 ```Bash
 npm run build
