@@ -1,6 +1,6 @@
 {
-	"name": "fastestsmallesttextencoderdecoder",
-	"version": "1.0.7",
+	"name": "fastestsmallesttextencoderdecoder-browser",
+	"version": "1.0.8",
 	"description": "The fastest smallest Javascript polyfill for the encode of TextEncoder and decode of TextDecoder for UTF-8 only. Made by AnonyCo with ❤️ from 🐕s.",
 	"keywords": ["utf-8","encoding","decoding","encoder","decoder","javascript","polyfill","js","utf8","compact","cross-browser","utf8-string","pure-javascript","nodejs","node-js","node-module","nodejs-modules","performance","tiny","small"],
 	"homepage": "https://github.com/anonyco/FastestSmallestTextEncoderDecoder#quick-start",
