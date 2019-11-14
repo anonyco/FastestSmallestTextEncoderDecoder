@@ -62,7 +62,7 @@ As for NodeJS, calling `require("EncoderAndDecoderNodeJS.min.js")` yields the fo
 ```Javascript
 module.exports = {
 	TextEncoder: function TextEncoder(){/*...*/},
-	TextDecoder: function TextEncoder(){/*...*/},
+	TextDecoder: function TextDecoder(){/*...*/},
 	encode: TextEncoder.prototype.encode,
 	decode: TextDecoder.prototype.decode
 }
