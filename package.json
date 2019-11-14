@@ -24,11 +24,14 @@
 	"main": "NodeJS/EncoderAndDecoderNodeJS.min.js",
 	"module": "NodeJS/EncoderAndDecoderNodeJS.min.module.js",
 	"es2015": "NodeJS/EncoderAndDecoderNodeJS.min.module.js",
+	"browser": "EncoderDecoderTogether.min.js",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/anonyco/FastestSmallestTextEncoderDecoder.git"
 	},
 	"files": [
+		"EncoderDecoderTogether.min.js",
+		"EncoderDecoderTogether.src.js",
 		"NodeJS/EncoderAndDecoderNodeJS.min.js",
 		"NodeJS/EncoderAndDecoderNodeJS.min.js.map",
 		"NodeJS/EncoderAndDecoderNodeJS.min.module.js",
