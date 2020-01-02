@@ -34,7 +34,7 @@
     return result;
   }
   function TextDecoder(){};
-  TextDecoder.prototype.decode = function(inputArrayOrBuffer){
+  TextDecoder["prototype"]["decode"] = function(inputArrayOrBuffer){
     var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
     var asObjectString = Object_prototype_toString.call(buffer);
     if (asObjectString !== arrayBufferString && asObjectString !== sharedArrayBufferString)

@@ -35,7 +35,7 @@
     );
   }
   function TextEncoder(){};
-  TextEncoder.prototype.encode = function(inputString){
+  TextEncoder["prototype"]["encode"] = function(inputString){
     // 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
     // 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
     var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g, encoderReplacer);
