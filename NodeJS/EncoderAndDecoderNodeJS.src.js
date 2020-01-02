@@ -4,14 +4,24 @@
   var log = Math.log;
   var LN2 = Math.LN2;
   var clz32 = Math.clz32 || function(x) {return 31 - log(x >>> 0) / LN2 | 0};
-  var fromCharCode = String.fromCharCode;
-  var Object_prototype_toString = ({}).toString;
+  var fromCharCode = String["fromCharCode"];
+  var Object_prototype_toString = ({})["toString"];
+  
+  var NativeSharedArrayBuffer = global["SharedArrayBuffer"];
+  var sharedArrayBufferString = NativeSharedArrayBuffer ? Object_prototype_toString.call(NativeSharedArrayBuffer) : "";
+  var NativeUint8Array = global["Uint8Array"];
+  var arrayBufferPrototypeString = NativeUint8Array ? Object_prototype_toString.call(ArrayBuffer.prototype) : "";
   var NativeBuffer = global["Buffer"];
-  if (!NativeBuffer && global["require"]) try{NativeBuffer=global["require"]("Buffer")}catch(e){}
-  var NativeBufferString = NativeBuffer && Object_prototype_toString.call(NativeBuffer.prototype);
-  var NativeUint8Array = global.Uint8Array;
-  var usingTypedArrays = NativeUint8Array && (!NativeBuffer || NativeUint8Array.prototype.isPrototypeOf(NativeBuffer));
-  var ArrayBufferString = usingTypedArrays && Object_prototype_toString.call(global.ArrayBuffer.prototype);
+  try {
+    if (!NativeBuffer && global["require"]) NativeBuffer=global["require"]("Buffer");
+    var NativeBufferPrototype = NativeBuffer.prototype;
+  	var globalBufferPrototypeString = NativeBuffer ? Object_prototype_toString.call(NativeBufferPrototype) : "";
+  } catch(e){}
+  var usingTypedArrays = !!NativeUint8Array && !NativeBuffer;
+  
+  // NativeBufferHasArrayBuffer is true if there is no global.Buffer or if native global.Buffer instances have a Buffer property for the internal ArrayBuffer
+  var NativeBufferHasArrayBuffer = !NativeBuffer || (!!NativeUint8Array && NativeUint8Array.prototype.isPrototypeOf(NativeBufferPrototype));
+  
   if (usingTypedArrays || NativeBuffer) {
     function decoderReplacer(encoded){
       var codePoint = encoded.charCodeAt(0) << 24;
@@ -41,12 +51,13 @@
     function decode(inputArrayOrBuffer){
       var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
       var asString = Object_prototype_toString.call(buffer);
-      if (asString !== ArrayBufferString && asString !== NativeBufferString)
+      if (asString !== arrayBufferPrototypeString && asString !== globalBufferPrototypeString && asString !== sharedArrayBufferString && asString !== "[object ArrayBuffer]")
         throw Error("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
-      var inputAs8 = usingTypedArrays ? new NativeUint8Array(buffer) : buffer;
+      var inputAs8 = NativeBufferHasArrayBuffer ? new NativeUint8Array(buffer) : buffer;
       var resultingString = "";
-      for (var index=0,len=inputAs8.length|0; index<len; index=index+32768|0)
-        resultingString += fromCharCode.apply(0, inputAs8[usingTypedArrays ? "subarray" : "slice"](index,index+32768|0));
+      var index=0,len=inputAs8.length|0;
+      for (; index<len; index=index+32768|0)
+        resultingString += fromCharCode.apply(0, inputAs8[NativeBufferHasArrayBuffer ? "subarray" : "slice"](index,index+32768|0));
 
       return resultingString.replace(/[\xc0-\xff][\x80-\xbf]*/g, decoderReplacer);
     }
@@ -86,8 +97,9 @@
       // 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
       // 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
       var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g, encoderReplacer);
-      var len=encodedString.length|0, result = new (usingTypedArrays ? NativeUint8Array : NativeBuffer)(len);
-      for (var i=0; i<len; i=i+1|0)
+      var len=encodedString.length|0, result = usingTypedArrays ? new NativeUint8Array(len) : NativeBuffer["alloc"] ? NativeBuffer["alloc"](len) : new NativeBuffer(len);
+      var i=0;
+      for (; i<len; i=i+1|0)
         result[i] = encodedString.charCodeAt(i)|0;
       return result;
     }

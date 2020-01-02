@@ -5,9 +5,11 @@
   var clz32 = Math.clz32 || function(x) {return 31 - log(x >>> 0) / LN2 | 0};
   var fromCharCode = String.fromCharCode;
   var Object_prototype_toString = ({}).toString;
+  var NativeSharedArrayBuffer = window["SharedArrayBuffer"];
+  var sharedArrayBufferString = NativeSharedArrayBuffer ? Object_prototype_toString.call(NativeSharedArrayBuffer) : "";
   var NativeUint8Array = window.Uint8Array;
   var patchedU8Array = NativeUint8Array || Array;
-  var ArrayBufferString = Object_prototype_toString.call((window.ArrayBuffer || patchedU8Array).prototype);
+  var arrayBufferString = Object_prototype_toString.call((NativeUint8Array ? ArrayBuffer : patchedU8Array).prototype);
   function decoderReplacer(encoded){
     var codePoint = encoded.charCodeAt(0) << 24;
     var leadingOnes = clz32(~codePoint)|0;
@@ -34,7 +36,8 @@
   function TextDecoder(){};
   TextDecoder.prototype.decode = function(inputArrayOrBuffer){
     var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
-    if (Object_prototype_toString.call(buffer) !== ArrayBufferString)
+    var asObjectString = Object_prototype_toString.call(buffer);
+    if (asObjectString !== arrayBufferString && asObjectString !== sharedArrayBufferString)
       throw Error("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
     var inputAs8 = NativeUint8Array ? new patchedU8Array(buffer) : buffer;
     var resultingString = "";
