@@ -27,6 +27,8 @@ If you know that no script on the page requires this library until the DOMConten
 
 Alternatively, either use `https://dl.dropboxusercontent.com/s/47481btie8pb95h/FastestTextEncoderPolyfill.min.js?dl=0` to polyfill `window.TextEncoder` for converting a `String` into a `Uint8Array` or use `https://dl.dropboxusercontent.com/s/qmoknmp86sytc74/FastestTextDecoderPolyfill.min.js?dl=0` to only polyfill `window.TextDecoder` for converting a `Uint8Array`/`ArrayBuffer`/*\[typedarray\]*/`global.Buffer` into a `String`.
 
+The `nomodule` attribute prevents the script from being needlessly downloaded and executed on browsers which already support `TextEncoder` and `TextDecoder`. `nomodule` does not test for the presence of `TextEncoder` or `TextDecoder`, but it is very safe to assume that browsers advanced enough to support modules also support `TextEncoder` and `TextDecoder`.
+
 ## RequireJS and NodeJS
 
 For dropping into either RequireJS or NodeJS, please use [the `fastestsmallesttextencoderdecoder` npm repository](https://npmjs.org/package/fastestsmallesttextencoderdecoder), [this minified file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.min.js), or the corresponding [source code file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.src.js). To install via npm, use the following code,
