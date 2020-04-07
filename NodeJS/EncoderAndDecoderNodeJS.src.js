@@ -51,7 +51,7 @@
     function decode(inputArrayOrBuffer){
       var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
       var asString = Object_prototype_toString.call(buffer);
-      if (asString !== arrayBufferPrototypeString && asString !== globalBufferPrototypeString && asString !== sharedArrayBufferString && asString !== "[object ArrayBuffer]")
+      if (asString !== arrayBufferPrototypeString && asString !== globalBufferPrototypeString && asString !== sharedArrayBufferString && asString !== "[object ArrayBuffer]" || inputArrayOrBuffer === undefined)
         throw Error("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
       var inputAs8 = NativeBufferHasArrayBuffer ? new NativeUint8Array(buffer) : buffer;
       var resultingString = "";
@@ -97,7 +97,7 @@
       // 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
       // 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
       var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g, encoderReplacer);
-      var len=encodedString.length|0, result = usingTypedArrays ? new NativeUint8Array(len) : NativeBuffer["alloc"] ? NativeBuffer["alloc"](len) : new NativeBuffer(len);
+      var len=encodedString.length|0, result = usingTypedArrays ? new NativeUint8Array(len) : NativeBuffer["allocUnsafe"] ? NativeBuffer["allocUnsafe"](len) : new NativeBuffer(len);
       var i=0;
       for (; i<len; i=i+1|0)
         result[i] = encodedString.charCodeAt(i)|0;
@@ -105,14 +105,16 @@
     }
     TextEncoder.prototype["encode"] = encode;
     function factory(obj) {
-        if (!obj["TextDecoder"]) obj["TextDecoder"] = TextDecoder;
-        if (!obj["TextEncoder"]) obj["TextEncoder"] = TextEncoder;
-        if (obj !== global) obj["decode"] = decode, obj["encode"] = encode;
+        if (!obj["TextDecoder"]) obj["TextDecoder"] = global["TextDecoder"] || TextDecoder;
+        if (!obj["TextEncoder"]) obj["TextEncoder"] = global["TextEncoder"] || TextEncoder;
+        //if (obj !== global) obj["decode"] = decode, obj["encode"] = encode;
         return obj;
     }
-
-    typeof define == typeof factory && define["amd"] ? define(function(){
-        return factory({});
-    }) : factory(typeof exports == 'object' ? exports : global);
+	
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(module["exports"]) :
+		typeof define == typeof factory && define["amd"] ? define(function(){
+		    return factory({});
+		}) :
+		factory(global);
   }
-})(typeof global == "" + void 0 ? typeof self == "" + void 0 ? this : self : global);
+})(typeof global == "" + void 0 ? typeof self == "" + void 0 ? this || {} : self : global);

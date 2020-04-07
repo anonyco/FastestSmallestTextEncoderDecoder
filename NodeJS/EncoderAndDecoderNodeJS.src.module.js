@@ -1,5 +1,5 @@
 "use strict";
-var window_global = typeof global == "" + void 0 ? self : global;
+var window_global = typeof global == "" + void 0 ? typeof self === "" + void 0 ? {} : self : global;
 // In this NodeJS version, Buffers are supported and used as fallback in versions that do not support Typed Arrays
 var log = Math.log;
 var LN2 = Math.LN2;
@@ -50,7 +50,7 @@ function TextDecoder() {}
 function decode(inputArrayOrBuffer){
   var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
   var asString = Object_prototype_toString.call(buffer);
-  if (asString !== arrayBufferPrototypeString && asString !== globalBufferPrototypeString && asString !== sharedArrayBufferString && asString !== "[object ArrayBuffer]")
+  if (asString !== arrayBufferPrototypeString && asString !== globalBufferPrototypeString && asString !== sharedArrayBufferString && asString !== "[object ArrayBuffer]" || inputArrayOrBuffer === undefined)
 	  throw Error("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
   var inputAs8 = NativeBufferHasArrayBuffer ? new NativeUint8Array(buffer) : buffer;
   var resultingString = "";
@@ -109,8 +109,8 @@ var FinalTextEncoder = window_global["TextEncoder"] || TextEncoder;
 
 window["export_TextDecoder"] = FinalTextDecoder;
 window["export_TextEncoder"] = FinalTextEncoder;
-window["export_decode"] = FinalTextDecoder === TextDecoder ? decode : new FinalTextDecoder["decode"];
-window["export_encode"] = FinalTextEncoder === TextEncoder ? encode : new FinalTextEncoder["encode"];
+//window["export_decode"] = FinalTextDecoder === TextDecoder ? decode : new FinalTextDecoder["decode"];
+//window["export_encode"] = FinalTextEncoder === TextEncoder ? encode : new FinalTextEncoder["encode"];
 
 export default {};
 
