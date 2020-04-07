@@ -104,10 +104,24 @@
       return result;
     }
     TextEncoder.prototype["encode"] = encode;
+    
+	function bindMethod(inst, name, _) {
+		_ = inst[name];
+		return function() {
+			_.apply(inst, arguments);
+		};
+	}
+
+	var GlobalTextEncoder = global["TextEncoder"];
+	var GlobalTextDecoder = global["TextDecoder"];
+    
     function factory(obj) {
-        if (!obj["TextDecoder"]) obj["TextDecoder"] = global["TextDecoder"] || TextDecoder;
-        if (!obj["TextEncoder"]) obj["TextEncoder"] = global["TextEncoder"] || TextEncoder;
-        //if (obj !== global) obj["decode"] = decode, obj["encode"] = encode;
+        obj["TextEncoder"] = GlobalTextEncoder || TextEncoder;
+        obj["TextDecoder"] = GlobalTextDecoder || TextDecoder;
+        if (obj !== global) {
+        	obj["encode"] = GlobalTextEncoder ? bindMethod(new GlobalTextEncoder, "encode") : encode;
+        	obj["decode"] = GlobalTextDecoder ? bindMethod(new GlobalTextDecoder, "decode") : decode;
+        }
         return obj;
     }
 	

@@ -96,7 +96,7 @@ function encode(inputString){
   // 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
   // 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
   var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g, encoderReplacer);
-  var len=encodedString.length|0, result = usingTypedArrays ? new NativeUint8Array(len) : NativeBuffer["alloc"] ? NativeBuffer["alloc"](len) : new NativeBuffer(len);
+  var len=encodedString.length|0, result = usingTypedArrays ? new NativeUint8Array(len) : NativeBuffer["allocUnsafe"] ? NativeBuffer["allocUnsafe"](len) : new NativeBuffer(len);
   var i=0;
   for (; i<len; i=i+1|0)
 	  result[i] = encodedString.charCodeAt(i)|0;
@@ -104,13 +104,49 @@ function encode(inputString){
 };
 TextEncoder.prototype["encode"] = encode;
 
-var FinalTextDecoder = window_global["TextDecoder"] || TextDecoder;
-var FinalTextEncoder = window_global["TextEncoder"] || TextEncoder;
+var GlobalTextDecoder = window_global["TextDecoder"];
+var GlobalTextEncoder = window_global["TextEncoder"];
 
-window["export_TextDecoder"] = FinalTextDecoder;
-window["export_TextEncoder"] = FinalTextEncoder;
-//window["export_decode"] = FinalTextDecoder === TextDecoder ? decode : new FinalTextDecoder["decode"];
-//window["export_encode"] = FinalTextEncoder === TextEncoder ? encode : new FinalTextEncoder["encode"];
+function bindMethod(inst, name, _) {
+	_ = inst[name];
+	return function() {
+		_.apply(inst, arguments);
+	};
+}
+
+window["export_TextEncoder"] = GlobalTextEncoder || TextEncoder;
+window["export_TextDecoder"] = GlobalTextDecoder || TextDecoder;
+window["export_encode"] = GlobalTextEncoder ? bindMethod(new GlobalTextEncoder, "encode") : encode;
+window["export_decode"] = GlobalTextDecoder ? bindMethod(new GlobalTextDecoder, "decode") : decode;
 
 export default {};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

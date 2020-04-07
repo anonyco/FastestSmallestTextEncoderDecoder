@@ -73,24 +73,31 @@ As for NodeJS, calling `require("EncoderAndDecoderNodeJS.min.js")` yields the fo
 ```Javascript
 module.exports = {
 	TextEncoder: function TextEncoder(){/*...*/},
-	TextDecoder: function TextDecoder(){/*...*/}
+	TextDecoder: function TextDecoder(){/*...*/},
+	encode: TextEncoder.prototype.encode,
+	decode: TextDecoder.prototype.decode
 }
 ```
 
-All of the code snippets below function identically <sub>(aside from unused local variables introduced into the scope)</sub>.
+In NodeJS, one does not ever have to use `new` just to get the encoder/decoder (although one still can do so if they want to). All of the code snippets below function identically <sub>(aside from unused local variables introduced into the scope)</sub>.
 
 ```Javascript
     // Variation 1
     const {TextEncoder, TextDecoder} = require("fastestsmallesttextencoderdecoder");
-    const encode = TextEncoder.prototype.encode.bind( new TextEncoder );
-    const decode = TextDecoder.prototype.decode.bind( new TextDecoder );
+    const encode = (new TextEncoder).encode;
+    const decode = (new TextDecoder).decode;
 ```
 
 ```Javascript
     // Variation 2
-    const encodeAndDecodeMod = require("fastestsmallesttextencoderdecoder");
-    const encode = encodeAndDecodeMod.TextEncoder.prototype.encode.bind( new TextEncoder );
-    const decode = encodeAndDecodeMod.TextDecoder.prototype.decode.bind( new TextDecoder );
+    const {encode, decode} = require("fastestsmallesttextencoderdecoder");
+```
+
+```Javascript
+    // Variation 3 (a rewording of Variation 2)
+    const encodeAndDecodeModule = require("fastestsmallesttextencoderdecoder");
+    const encode = encodeAndDecodeModule.encode;
+    const decode = encodeAndDecodeModule.decode;
 ```
 
 Or, one can use the new and shiny [ES6 module importation](https://developer.mozilla.org/en-US/docs/web/javascript/reference/statements/import) statements.
@@ -99,15 +106,20 @@ Or, one can use the new and shiny [ES6 module importation](https://developer.moz
 ```Javascript
     // Variation 1
     import {TextEncoder, TextDecoder} from "fastestsmallesttextencoderdecoder";
-    const encode = TextEncoder.prototype.encode.bind( new TextEncoder );
-    const decode = TextDecoder.prototype.decode.bind( new TextDecoder );
+    const encode = (new TextEncoder).encode;
+    const decode = (new TextDecoder).decode;
 ```
 
 ```Javascript
-    // Variation 2 (a rewording of Variation 1)
-    import * as encodeAndDecodeMod from "fastestsmallesttextencoderdecoder";
-    const encode = encodeAndDecodeMod.TextEncoder.prototype.encode.bind( new TextEncoder );
-    const decode = encodeAndDecodeMod.TextDecoder.prototype.decode.bind( new TextDecoder );
+    // Variation 2
+    import {encode, decode} from "fastestsmallesttextencoderdecoder";
+```
+
+```Javascript
+    // Variation 3 (a rewording of Variation 2)
+    import * as encodeAndDecodeModule from "fastestsmallesttextencoderdecoder";
+    const encode = encodeAndDecodeModule.encode;
+    const decode = encodeAndDecodeModule.decode;
 ```
 
 
