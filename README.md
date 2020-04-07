@@ -38,7 +38,13 @@ npm install fastestsmallesttextencoderdecoder
 ```
 
 ## AngularJS
-Jack Giffin, the creator of this library, has never used AngularJS and, in his research, he could not find a way to incorperate AngularJS with its typing into this library without adding many new files to the top level directory, which would clutter this library. If you are using AngularJS, the current reccomendation is to use the dropbox scripts under the Quick Start section at the top. Alternatively, if you want to help out a fellow developer, Jack would much appreciate your help in integrating AngularJS into this library; please edit this project to integrate AngularJS, then open a pull request so that Jack can merge it.
+Open a terminal in your project's directory, and install fastestsmallesttextencoderdecoder via npm.
+
+```Bash
+npm install fastestsmallesttextencoderdecoder
+```
+
+Then, add `import 'fastestsmallesttextencoderdecoder';` to your polyfills.ts file. 
 
 ## Browser Support
 
