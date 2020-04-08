@@ -37,8 +37,8 @@
   TextDecoder["prototype"]["decode"] = function(inputArrayOrBuffer){
     var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
     var asObjectString = Object_prototype_toString.call(buffer);
-    if (asObjectString !== arrayBufferString && asObjectString !== sharedArrayBufferString || inputArrayOrBuffer === undefined)
-      throw Error("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
+    if (asObjectString !== arrayBufferString && asObjectString !== sharedArrayBufferString && inputArrayOrBuffer !== undefined)
+      throw TypeError("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
     var inputAs8 = NativeUint8Array ? new patchedU8Array(buffer) : buffer;
     var resultingString = "";
     for (var index=0,len=inputAs8.length|0; index<len; index=index+32768|0)

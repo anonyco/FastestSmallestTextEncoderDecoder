@@ -50,9 +50,9 @@ function TextDecoder() {}
 function decode(inputArrayOrBuffer){
   var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
   var asString = Object_prototype_toString.call(buffer);
-  if (asString !== arrayBufferPrototypeString && asString !== globalBufferPrototypeString && asString !== sharedArrayBufferString && asString !== "[object ArrayBuffer]" || inputArrayOrBuffer === undefined)
-	  throw Error("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
-  var inputAs8 = NativeBufferHasArrayBuffer ? new NativeUint8Array(buffer) : buffer;
+  if (asString !== arrayBufferPrototypeString && asString !== globalBufferPrototypeString && asString !== sharedArrayBufferString && asString !== "[object ArrayBuffer]" && inputArrayOrBuffer !== undefined)
+	  throw TypeError("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
+  var inputAs8 = NativeBufferHasArrayBuffer ? new NativeUint8Array(buffer) : buffer || [];
   var resultingString = "";
   var index=0,len=inputAs8.length|0;
   for (; index<len; index=index+32768|0)
