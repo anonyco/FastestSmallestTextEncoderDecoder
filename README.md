@@ -36,6 +36,8 @@ For dropping into either RequireJS or NodeJS, please use [the `fastestsmallestte
 npm install fastestsmallesttextencoderdecoder
 ```
 
+After installing via npm, one can use `require("fastestsmallesttextencoderdecoder")`. Alternatively, one can drop the *EncoderAndDecoderNodeJS.min.js* file into the same directory as their NodeJS script and do `require("./EncoderAndDecoderNodeJS.min.js")`. Both methods are functionally equivalent.
+
 ## AngularJS
 Open a terminal in the project's directory, and install fastestsmallesttextencoderdecoder via npm.
 
