@@ -30,7 +30,7 @@ The `nomodule` attribute prevents the script from being needlessly downloaded an
 
 ## EncodeInto
 
-See MDN here for documentation. For the TextEncoder.prototype.encodeInto polyfill, please use `https://dl.dropboxusercontent.com/s/i2e2rho1ohtbhfg/EncoderDecoderTogether.min.js?dl=0` for the full package, `https://dl.dropboxusercontent.com/s/nlcgzbr0ayd5pjs/FastestTextEncoderPolyfill.min.js?dl=0` for only TextEncoder and TextEncoder.prototype.encodeInto, and `npm i fastestsmallesttextencoderdecoder-encodeinto` for NodeJS, es6 modules, RequireJS, AngularJS, or whatever it is that floats your boat.
+See the [MDN here](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder/encodeInto) for documentation. For the TextEncoder.prototype.encodeInto polyfill, please use `https://dl.dropboxusercontent.com/s/i2e2rho1ohtbhfg/EncoderDecoderTogether.min.js?dl=0` for the full package, `https://dl.dropboxusercontent.com/s/nlcgzbr0ayd5pjs/FastestTextEncoderPolyfill.min.js?dl=0` for only TextEncoder and TextEncoder.prototype.encodeInto, and `npm i fastestsmallesttextencoderdecoder-encodeinto` for NodeJS, es6 modules, RequireJS, AngularJS, or whatever it is that floats your boat.
 
 ## RequireJS and NodeJS
 
