@@ -1,1 +1,1 @@
-Please see [fastestsmallesttextencoderdecoder](fastestsmallesttextencoderdecoder) for usage and details
+Please see [fastestsmallesttextencoderdecoder](https://www.npmjs.com/package/fastestsmallesttextencoderdecoder) for usage and details
