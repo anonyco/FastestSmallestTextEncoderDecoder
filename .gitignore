@@ -1,11 +1,35 @@
 # in case if you have installed node modules
 /node_modules
 /package-lock.json
+/test/node_modules
 
 # skip the utilities used to build this library
 /compiler-latest
 /closure-compiler.jar
 /zopfli
+/npm-repository
 
 # just in case
 /.git
+/.npmignore
+
+
+
+# now for the inner dist:
+/dist/src/
+/dist/package.json
+/dist/LICENSE
+/src/src/
+
+# in case if you have installed node modules
+/dist/node_modules
+/dist/package-lock.json
+/dist/README.md
+
+# skip the utilities used to build this library
+/dist/closure-compiler.jar
+
+# just in case
+/dist/.git
+/dist/.npmignore
+

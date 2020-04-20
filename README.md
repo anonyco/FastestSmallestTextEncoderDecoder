@@ -1,14 +1,14 @@
 
 
 [![npm version](http://img.shields.io/npm/v/fastestsmallesttextencoderdecoder.svg?label=version)](https://npmjs.org/package/fastestsmallesttextencoderdecoder "View this project on npm")
-[![GitHub stars](https://img.shields.io/github/stars/anonyco/FastestSmallestTextEncoderDecoder.svg?style=social)](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/stargazers "View others who have stared this repository")
-[![GitHub file size in bytes](https://img.shields.io/github/size/anonyco/FastestSmallestTextEncoderDecoder/EncoderDecoderTogether.min.js.svg?label=without%20gzip)](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/EncoderDecoderTogether.min.js "File without gzip")
-[![GitHub file size in bytes](https://img.shields.io/github/size/anonyco/FastestSmallestTextEncoderDecoder/gh-pages/EncoderDecoderTogether.min.js.gz.svg?label=gzip%20applied)](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/gh-pages/EncoderDecoderTogether.min.js.gz "Gzipped file")
-[![npm bundle size (version)](https://img.shields.io/bundlephobia/min/fastestsmallesttextencoderdecoder/latest.svg?color=maroon&label=NPM%20bundle%20size)](https://npmjs.org/package/fastestsmallesttextencoderdecoder "View this project on npm")<!--[![Issues](http://img.shields.io/github/issues/anonyco/FastestSmallestTextEncoderDecoder.svg)]( https://github.com/anonyco/FastestSmallestTextEncoderDecoder/issues )-->
+[![GitHub stars](https://img.shields.io/github/stars/anonyco/FastSmallTextEncoderDecoder.svg?style=social)](https://github.com/anonyco/FastSmallTextEncoderDecoder/stargazers "View others who have stared this repository")
+[![GitHub file size in bytes](https://img.shields.io/github/size/anonyco/FastSmallTextEncoderDecoder/EncoderDecoderTogether.min.js.svg?label=without%20gzip)](https://github.com/anonyco/FastSmallTextEncoderDecoder/blob/master/EncoderDecoderTogether.min.js "File without gzip")
+[![GitHub file size in bytes](https://img.shields.io/github/size/anonyco/FastSmallTextEncoderDecoder/test/EncoderDecoderTogether.min.js.gz.svg?label=gzip%20applied)](https://github.com/anonyco/FastSmallTextEncoderDecoder/blob/master/test/EncoderDecoderTogether.min.js.gz "Gzipped file")
+[![npm bundle size (version)](https://img.shields.io/bundlephobia/min/fastestsmallesttextencoderdecoder/latest.svg?color=maroon&label=NPM%20bundle%20size)](https://npmjs.org/package/fastestsmallesttextencoderdecoder "View this project on npm")<!--[![Issues](http://img.shields.io/github/issues/anonyco/FastSmallTextEncoderDecoder.svg)]( https://github.com/anonyco/FastSmallTextEncoderDecoder/issues )-->
 [![Unlicense license](http://img.shields.io/badge/license-Unlicense-brightgreen.svg)](https://unlicense.org/ "This project's liscence")
 [![npm downloads](https://img.shields.io/npm/dt/fastestsmallesttextencoderdecoder.svg)](https://npmjs.org/package/fastestsmallesttextencoderdecoder "View this project on npm")
 
-This Javascript library provides the most performant tiny polyfill for [`window.TextEncoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder) and [`window.TextDecoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder) for use in [the browser](https://developer.mozilla.org/en-US/docs/Web/API/Window), in [NodeJS](https://nodejs.org/en/docs/), in [RequireJS](https://requirejs.org/docs/whyamd.html), in web [Worker](https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope)s, in [SharedWorker](https://developer.mozilla.org/en-US/docs/Web/API/SharedWorkerGlobalScope)s, and in [ServiceWorker](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope)s.
+This Javascript library provides the most performant tiny polyfill for [`window.TextEncoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder), [`TextEncoder.prototype.encodeInto`](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder/encodeInto), and [`window.TextDecoder`](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder) for use in [the browser](https://developer.mozilla.org/en-US/docs/Web/API/Window), in [NodeJS](https://nodejs.org/en/docs/), in [RequireJS](https://requirejs.org/docs/whyamd.html), in web [Worker](https://developer.mozilla.org/en-US/docs/Web/API/DedicatedWorkerGlobalScope)s, in [SharedWorker](https://developer.mozilla.org/en-US/docs/Web/API/SharedWorkerGlobalScope)s, and in [ServiceWorker](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope)s.
 
 ## Quick Start
 
@@ -30,11 +30,22 @@ The `nomodule` attribute prevents the script from being needlessly downloaded an
 
 ## RequireJS and NodeJS
 
-For dropping into either RequireJS or NodeJS, please use [the `fastestsmallesttextencoderdecoder` npm repository](https://npmjs.org/package/fastestsmallesttextencoderdecoder), [this minified file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.min.js), or the corresponding [source code file](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.src.js). To install via npm, use the following code,
+For dropping into either RequireJS or NodeJS, please use [the `fastestsmallesttextencoderdecoder` npm repository](https://npmjs.org/package/fastestsmallesttextencoderdecoder), [this minified file](https://github.com/anonyco/FastSmallTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.min.js), or the corresponding [source code file](https://github.com/anonyco/FastSmallTextEncoderDecoder/blob/master/NodeJS/EncoderAndDecoderNodeJS.src.js). To install via npm, use the following code.
 
 ```Bash
 npm install fastestsmallesttextencoderdecoder
 ```
+
+Alternatively, if one do not know how to use the command line, save the script corresponding to one's operating system to the directory where the nodejs script will run and use the file manager to run the script (on Windows, it's a double-click).
+
+
+* fastestsmallesttextencoderdecoder
+    - Microsoft Windows batch: [install-FastSmallTextEncoderDecoder-windows.bat](https://raw.githubusercontent.com/anonyco/FastSmallTextEncoderDecoder/master/gh-pages/install-FastSmallTextEncoderDecoder-windows.bat)
+    - Bash for Apple MacOS and Linux (e.x. Ubuntu): [install-FastSmallTextEncoderDecoder-unix.sh](https://raw.githubusercontent.com/anonyco/FastSmallTextEncoderDecoder/master/gh-pages/install-FastSmallTextEncoderDecoder-unix.sh)
+* fastestsmallesttextencoderdecoder-encodeinto
+    - Microsoft Windows batch: [install-FastSmallTextEncoderDecoder-encodeInto.bat](https://raw.githubusercontent.com/anonyco/FastSmallTextEncoderDecoder/master/gh-pages/install-FastSmallTextEncoderDecoder-encodeInto.bat)
+    - Bash for Apple MacOS and Linux (e.x. Ubuntu): [install-FastSmallTextEncoderDecoder-encodeInto.sh](https://raw.githubusercontent.com/anonyco/FastSmallTextEncoderDecoder/master/gh-pages/install-FastSmallTextEncoderDecoder-encodeInto.sh)
+
 
 After installing via npm, one can use `require("fastestsmallesttextencoderdecoder")`. Alternatively, one can drop the *EncoderAndDecoderNodeJS.min.js* file into the same directory as their NodeJS script and do `require("./EncoderAndDecoderNodeJS.min.js")`. Both methods are functionally equivalent.
 
@@ -46,6 +57,10 @@ npm install fastestsmallesttextencoderdecoder
 ```
 
 Then, add `import 'fastestsmallesttextencoderdecoder';` to the polyfills.ts file. 
+
+## Encode Into branch
+
+The [encodeInto](https://raw.githubusercontent.com/anonyco/FastSmallTextEncoderDecoder/master/encodeInto/) folder of this repository contains an encodeInto build of the main project. The encodeInto branch
 
 ## Browser Support
 
@@ -124,35 +139,35 @@ Or, one can use the new and shiny [ES6 module importation](https://developer.moz
 ```
 
 
-Note that *fastestsmallesttextencoderdecoder* must be installed via the following snippet in the terminal in order for the `require("fastestsmallesttextencoderdecoder")` to work.
+## Demonstration
 
-```Bash
-npm install fastestsmallesttextencoderdecoder
-```
-
-# Demonstration
-
-Visit the [GithubPage](https://anonyco.github.io/FastestSmallestTextEncoderDecoder/gh-pages/) to see a demonstation. As seen in the Web Worker [hexWorker.js](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/gh-pages/hexWorker.js), the Github Pages demonstration uses a special [encoderAndDecoderForced.src.js](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/gh-pages/encoderAndDecoderForced.src.js) version of this library to forcefully install the TextEncoder and TextDecoder even when there is native support. That way, this demonstraton should serve to truthfully demonstrate this polyfill.
+Visit the [GithubPage](https://anonyco.github.io/FastSmallTextEncoderDecoder/gh-pages/) to see a demonstation. As seen in the Web Worker [hexWorker.js](https://github.com/anonyco/FastSmallTextEncoderDecoder/blob/master/gh-pages/hexWorker.js), the Github Pages demonstration uses a special [encoderAndDecoderForced.src.js](https://github.com/anonyco/FastSmallTextEncoderDecoder/blob/master/gh-pages/encoderAndDecoderForced.src.js) version of this library to forcefully install the TextEncoder and TextDecoder even when there is native support. That way, this demonstraton should serve to truthfully demonstrate this polyfill.
 
 ## npm Project
 This project can be found on [npm here at this link](https://npmjs.org/package/fastestsmallesttextencoderdecoder).
 
-# Development
+## Development
 
-On linux, the project can be developed by cloning it with the following command line.
+On Linux, the project can be developed by cloning it with the following command line. The development scripts are designed to be interpeted by Dash, and whether they work on Mac OS is unknown, but they certainly won't work on Windows.
 
 ```Bash
-git clone https://github.com/anonyco/FastestSmallestTextEncoderDecoder.git; cd FastestSmallestTextEncoderDecoder; npm run install-dev
+git clone https://github.com/anonyco/FastSmallTextEncoderDecoder.git; cd FastSmallTextEncoderDecoder; npm run install-dev
 ```
 
-Emphasize the `npm run install-dev` which downloads `closure-compiler.jar` into the repository for minifying the files.
+Emphasize the `npm run install-dev`, which downloads `closure-compiler.jar` into the repository for minifying the files.
 
-Now that the repository is cloned, edit the files as one see fit. Now that the files have been edited, run the following in the terminal in the root folder of the repository in order to minify the NodeJS JavaScript files.
+Now that the repository is cloned, edit the files as one see fit. Do not edit the files in the `encodeInto` folder. Those are all auto-generated. Also, do not run `npm run build` in the `encodeInto`. That's done automatically when `npm run build` is runned in the topmost folder. Now that the files have been edited, run the following in the terminal in the root folder of the repository in order to minify the NodeJS JavaScript files.
 
 ```Bash
 npm run build
 ```
 
-# Continuity
+To edit tests, edit `test/node.js`. These tests are compared against the native implementation to ensure validity. To run tests, do the following. 
+
+```Bash
+npm run test
+```
+
+## Continuity
 
 I try my best to be a realist, and what's more realistic than death? I am going to die someday and it may be tomorrow in a car crash. You never know. As I have no coder freinds to look out for my projects, I'm looking for anyone who wants to be a collaborator on this project in the event of the unforseen. Reach out to me at wowzeryest@gmail.com. If issues/pulls start piling up over the course of months, assume the worst. As I am trying my best to do my part to help the community, I encourage every developer to share their projects with other people to ensure continuity.
