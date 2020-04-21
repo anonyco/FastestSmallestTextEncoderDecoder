@@ -41,7 +41,7 @@
 		"prepublishOnly": "if [ -f './encodeInto/package.json' ]; then cd encodeInto; npm publish; cd ..; fi",
 		"test": "if [ \"${PWD##*/}\" != 'encodeInto' ]; then cd encodeInto/test; node --preserve-symlinks --preserve-symlinks-main -- 'test.js' -test-encode-into; cd ../..; fi; cd test; node --preserve-symlinks --preserve-symlinks-main -- 'test.js'"
 	},
-	"license": "CC0-1.0	",
+	"license": "CC0-1.0",
 	"author": {
 		"name": "Jack Giffin",
 		"email": "wowzeryest@gmail.com",

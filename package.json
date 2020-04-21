@@ -1,6 +1,6 @@
 {
 	"name": "fastestsmallesttextencoderdecoder",
-	"version": "1.0.18",
+	"version": "1.0.19",
 	"description": "The fastest smallest Javascript polyfill for the encode of TextEncoder and decode of TextDecoder for UTF-8 only. Made by AnonyCo with ❤️ from 🐕s.",
 	"keywords": [
 		"utf-8",
@@ -41,7 +41,7 @@
 		"prepublishOnly": "if [ -f './encodeInto/package.json' ]; then cd encodeInto; npm publish; cd ..; fi",
 		"test": "if [ \"${PWD##*/}\" != 'encodeInto' ]; then cd encodeInto/test; node --preserve-symlinks --preserve-symlinks-main -- 'test.js' -test-encode-into; cd ../..; fi; cd test; node --preserve-symlinks --preserve-symlinks-main -- 'test.js'"
 	},
-	"license": "Unlicense",
+	"license": "CC0-1.0",
 	"author": {
 		"name": "Jack Giffin",
 		"email": "wowzeryest@gmail.com",
