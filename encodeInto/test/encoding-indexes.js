@@ -1,0 +1,1 @@
+../../test/encoding-indexes.js
