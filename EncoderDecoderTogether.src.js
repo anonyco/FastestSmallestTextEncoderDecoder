@@ -3,9 +3,9 @@ var ENCODEINTO_BUILD = false;
 
 (function(window){
 	"use strict";
-	var log = Math.log;
-	var LN2 = Math.LN2;
-	var clz32 = Math.clz32 || function(x) {return 31 - log(x >>> 0) / LN2 | 0};
+	//var log = Math.log;
+	//var LN2 = Math.LN2;
+	//var clz32 = Math.clz32 || function(x) {return 31 - log(x >>> 0) / LN2 | 0};
 	var fromCharCode = String.fromCharCode;
 	var Object_prototype_toString = ({}).toString;
 	var NativeSharedArrayBuffer = window["SharedArrayBuffer"];
@@ -13,8 +13,12 @@ var ENCODEINTO_BUILD = false;
 	var NativeUint8Array = window.Uint8Array;
 	var patchedU8Array = NativeUint8Array || Array;
 	var arrayBufferString = Object_prototype_toString.call((NativeUint8Array ? ArrayBuffer : patchedU8Array).prototype);
+	var window_encodeURIComponent = encodeURIComponent;
+	var window_parseInt = parseInt;
 	var TextEncoderPrototype = TextEncoder["prototype"];
 	var GlobalTextEncoder = window["TextEncoder"];
+	var decoderRegexp = /[\xc0-\xff][\x80-\xbf]+|[\x80-\xff]/g;
+	var encoderRegexp = /[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g;
 	var globalTextEncoderPrototype;
 	var globalTextEncoderInstance;
 	
@@ -57,16 +61,19 @@ var ENCODEINTO_BUILD = false;
 	}
 	function TextDecoder(){};
 	TextDecoder["prototype"]["decode"] = function(inputArrayOrBuffer){
-		var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
-		var asObjectString = Object_prototype_toString.call(buffer);
-		if (asObjectString !== arrayBufferString && asObjectString !== sharedArrayBufferString && inputArrayOrBuffer !== undefined)
-			throw TypeError("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
-		var inputAs8 = NativeUint8Array ? new patchedU8Array(buffer) : buffer;
+		var inputAs8 = inputArrayOrBuffer;
+		if (!inputAs8 || inputAs8.constructor !== patchedU8Array) {
+			var buffer = (inputArrayOrBuffer && inputArrayOrBuffer.buffer) || inputArrayOrBuffer;
+			var asObjectString = Object_prototype_toString.call(buffer);
+			if (asObjectString !== arrayBufferString && asObjectString !== sharedArrayBufferString && inputArrayOrBuffer !== undefined)
+				throw TypeError("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
+			inputAs8 = /*NativeUint8Array ?*/ new patchedU8Array(buffer); //: buffer;
+		}
 		var resultingString = "";
 		for (var index=0,len=inputAs8.length|0; index<len; index=index+32768|0)
-			resultingString += fromCharCode.apply(0, inputAs8[NativeUint8Array ? "subarray" : "slice"](index,index+32768|0));
+			resultingString += fromCharCode.apply(null, NativeUint8Array ? inputAs8.subarray(index,index+32768|0) : inputAs8.slice(index,index+32768|0));
 
-		return resultingString.replace(/[\xc0-\xff][\x80-\xbf]+|[\x80-\xff]/g, decoderReplacer);
+		return resultingString.replace(decoderRegexp, decoderReplacer);
 	}
 	if (!window["TextDecoder"]) window["TextDecoder"] = TextDecoder;
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -101,14 +108,33 @@ var ENCODEINTO_BUILD = false;
 	TextEncoderPrototype["encode"] = function(inputString){
 		// 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
 		// 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
-		var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g, encoderReplacer);
-		var len=encodedString.length|0, result = new patchedU8Array(len);
-		for (var i=0; i<len; i=i+1|0)
+		var encodedString = inputString === void 0 ? "" : ("" + inputString), len=0, result, i=0, pos=0, code=0;
+		if (encodedString.length < 16384) {
+			encodedString = window_encodeURIComponent(encodedString);
+			result = new patchedU8Array(encodedString.length);
+			
+			
+			for (len=encoded.length|0; i<len; i=i+1|0) {
+				code = encodedString.charCodeAt(i);
+				if (code === 37) { //  "%"
+					result[pos] = parseInt(encodedString.substr(pos+1|0, 2), 16)|0;
+					i = i+2|0;
+				} else {
+					result[pos] = code;
+				} 
+				pos = pos + 1|0;
+			}
+			
+			return NativeUint8Array ? result.subarray(0, pos) : result.slice(0, pos);//result[NativeUint8Array ? "subarray" : "slice"](0, pos);
+		}
+		encodedString = encodedString.replace(encoderRegexp, encoderReplacer);
+		len=encodedString.length|0, result = new patchedU8Array(len);
+		for (i=0; i<len; i=i+1|0)
 			result[i] = encodedString.charCodeAt(i);
 		return result;
 	};
 	function polyfill_encodeInto(inputString, u8Arr) {
-		var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(/[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g, encoderReplacer);
+		var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(encoderRegexp, encoderReplacer);
 		var len=encodedString.length|0, i=0, char=0, read=0, u8ArrLen = u8Arr.length|0, inputLength=inputString.length|0;
 		if (u8ArrLen < len) len=u8ArrLen;
 		putChars: for (; i<len; i=i+1|0) {

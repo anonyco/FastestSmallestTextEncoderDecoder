@@ -2,6 +2,7 @@
 /node_modules
 /package-lock.json
 /test/node_modules
+/test/encoding-indexes.js
 
 # skip the utilities used to build this library
 /compiler-latest
