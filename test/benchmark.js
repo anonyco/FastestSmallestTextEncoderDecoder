@@ -169,7 +169,7 @@ allAssoc({
 	}
 	
 	await runTest("FastTextEncoding", "| [fast-text-encoding](https://github.com/samthor/fast-text-encoding) |");
-	await runTest("TextEncoding", "| [text-encoding](https://github.com/inexorabletash/text-encoding)) |");
+	await runTest("TextEncoding", "| [text-encoding](https://github.com/inexorabletash/text-encoding) |");
 	await runTest("TextEncoderTextDecoderJS", "| [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) |");
 	await runTest("textEncoderLite", "| [TextEncoderLite](https://github.com/solderjs/TextEncoderLite) |");
 	await runTest("textEncoderShim", "| [text-encoding-shim](https://gitlab.com/PseudoPsycho/text-encoding-shim) |");
