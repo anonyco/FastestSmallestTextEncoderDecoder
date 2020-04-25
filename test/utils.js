@@ -334,9 +334,9 @@ proto.runTest = function(testName) {
 	
 	for (const handle of this.handles) {
 		const baseLineId = handle.baseLineId;
-		let expected, realValue;
+		let expected, realValue, errored=false;
 		try {expected = typeof baseLineId === "function" ? baseLineId.apply(null, argsList) : rawExpectations[baseLineId]} catch(e) {expected = e}
-		try {realValue = handle.handle.apply(handle.thisArg, argsList)} catch(e) {realValue = e}
+		try {realValue = handle.handle.apply(handle.thisArg, argsList)} catch(e) {errored=true; realValue = e}
 		
 		if (firstTime) {
 			
@@ -347,6 +347,7 @@ proto.runTest = function(testName) {
 		if (deepEnoughEquals( expected, realValue )) {
 			handle.resultsByGroup[groupId].push( '\x1b[32m\u2714 pass\x1b[0m' );
 		} else {
+			if (errored) console.warn(realValue);
 			handle.resultsByGroup[groupId].push( '\x1b[91m\u2717 !ERR!\x1b[0m' );
 			handle.errorLog += "\nMethod " + handle.Method + " in " + handle.source + " failed " + testName + " (on " + groupName + "):\n" +
 								"    Expected: " + JSON_stringify(expected) + "\n" +

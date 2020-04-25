@@ -4,12 +4,21 @@ try {Table = require('tty-table')} catch(e) {
 	require("child_process").spawnSync("npm", ["i"], {windowsHide: true, timeout: 20000}); // If it takes more than 20 seconds, there's definately something wrong
 	Table = require('tty-table');
 }
+if (process.platform === 'linux') {
+	console.log("We need to increase the priority of the process to ensure more consistant results...");
+	try {
+	require('child_process').spawnSync("sudo", ["chrt", "-f", "-p", "99", process.pid], {windowsHide: true, timeout: 9000});
+	} catch(e) {}
+}
+
+
 const Promise = global.Promise;
 const setImmediate = global.setImmediate;
 const https = require("https");
 const fs = require("fs");
 const /*Array_isArray = Array.isArray,*/ Uint8Array = global.Uint8Array;
 const Math_min = Math.min, Math_max = Math.max, Math_round = Math.round;
+const Buffer_compare = Buffer.compare;
 const performance = require("perf_hooks").performance;
 //node -e 'var perf = require("perf_hooks").performance; for(let i=0;i<300;i=i+1|0)perf.now(); var start=perf.now(); for(let i=0;i<99999;i=i+1|0)perf.now(); var end=perf.now(); console.log( end - start )'
 
@@ -52,9 +61,9 @@ allAssoc({
 	const mediumAsciiArray = largeAsciiArray.subarray(32768, 65536);
 	const smallAsciiArray = largeAsciiArray.subarray(32, 64);
 	
-	const largeAsciiString = assets.nativeImplementation.encode(largeAsciiArray);
-	const mediumAsciiString = assets.nativeImplementation.encode(mediumAsciiArray);
-	const smallAsciiString = assets.nativeImplementation.encode(smallAsciiArray);
+	const largeAsciiString = assets.nativeImplementation.decode(largeAsciiArray);
+	const mediumAsciiString = assets.nativeImplementation.decode(mediumAsciiArray);
+	const smallAsciiString = assets.nativeImplementation.decode(smallAsciiArray);
 	
 	
 	
@@ -62,14 +71,14 @@ allAssoc({
 	const mediumTestArray = largeTestArray.subarray(32768, 65536); // potential invalid points at start/end are intended
 	const smallTestArray = largeTestArray.subarray(32, 64); // potential invalid points at start/end are intended
 	
-	const largeTestString = assets.nativeImplementation.encode(largeTestArray);
-	const mediumTestString = assets.nativeImplementation.encode(mediumTestArray);
-	const smallTestString = assets.nativeImplementation.encode(smallTestArray);
+	const largeTestString = assets.nativeImplementation.decode(largeTestArray);
+	const mediumTestString = assets.nativeImplementation.decode(mediumTestArray);
+	const smallTestString = assets.nativeImplementation.decode(smallTestArray);
 	
 	
 	const bibleRussianArray = Uint8Array.prototype.subarray.call(assets.bibleInRussian);
 	
-	const bibleRussianString = assets.nativeImplementation.encode(bibleRussianArray);
+	const bibleRussianString = assets.nativeImplementation.decode(bibleRussianArray);
 	
 	
 	
@@ -89,14 +98,15 @@ allAssoc({
 	);
 	
 
-	function averageTimeUnit(bencher, f, v, count) {
-		global.gc( true ); // force full garbage collection clean slate to start off with
-		
+	function averageTimeUnit(bencher, f, v, count, expectation) {
 		return new Promise(function(resolve) { 
+			global.gc( true ); // force full garbage collection clean slate to start off with
+			
 			setImmediate(function() {
 				var samples = [];
 				
 				try {
+					var sampleResult = f(v);
 					for (let i=0; i<count; i=i+1|0) samples.push( bencher(f, v) );
 				} catch (e) {console.error(e); resolve("<i>ERROR</i>"); return;}
 				
@@ -105,7 +115,14 @@ allAssoc({
 				for (let i=count<7?0:count>>>2, end=count<7?count:(count+count+count+3|0)>>>2; i<count; i=i+1|0)
 					sum += samples[i], divisor = divisor + 1|0;
 				
-				resolve( " " + Math_round(v.length / (sum / divisor / 1000) / 1024) + " Kb/sec" );
+				var symbol = "\u2717"; // X wrong
+				if (typeof expectation === "object" && typeof sampleResult === "object" && Buffer_compare(expectation, sampleResult) === 0) {
+					symbol = "\u2714"; // good checkmark
+				} else if (typeof expectation === "string" && expectation === sampleResult) {
+					symbol = "\u2714"; // good checkmark
+				}
+				
+				resolve( " " + Math_round((v.byteLength || expectation.byteLength) / (sum / divisor / 1000) / 1024) + " KB/sec " + symbol );
 			});
 		});
 	}
@@ -120,15 +137,15 @@ allAssoc({
 		var russianRow = tableStart;
 		
 		if (encodeAndDecode.decode) {
-			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallAsciiArray, 192) + " |";
-			asciiRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.decode, mediumAsciiArray, 36) + " |";
-			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeAsciiArray, 2) + " |";
+			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallAsciiArray, 56, smallAsciiString) + " |";
+			asciiRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.decode, mediumAsciiArray, 24, mediumAsciiString) + " |";
+			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeAsciiArray, 2, largeAsciiString) + " |";
 			
-			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallTestArray, 192) + " |";
-			resultRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.decode, mediumTestArray, 36) + " |";
-			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeTestArray, 2) + " |";
+			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallTestArray, 56, smallTestString) + " |";
+			resultRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.decode, mediumTestArray, 24, mediumTestString) + " |";
+			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeTestArray, 2, largeTestString) + " |";
 			
-			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, bibleRussianArray, 2) + " |";
+			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, bibleRussianArray, 2, bibleRussianString) + " |";
 		} else {
 			asciiRow += "n/a | ";
 			asciiRow += "n/a | ";
@@ -142,15 +159,15 @@ allAssoc({
 		}
 		
 		if (encodeAndDecode.encode) {
-			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallAsciiString, 192) + " |";
-			asciiRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.encode, mediumAsciiString, 36) + " |";
-			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeAsciiString, 2) + " |";
+			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallAsciiString, 56, smallAsciiArray) + " |";
+			asciiRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.encode, mediumAsciiString, 24, mediumAsciiArray) + " |";
+			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeAsciiString, 2, largeAsciiArray) + " |";
 			
-			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallTestString, 192) + " |";
-			resultRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.encode, mediumTestString, 36) + " |";
-			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeTestString, 2) + " |";
+			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallTestString, 56, smallTestArray) + " |";
+			resultRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.encode, mediumTestString, 24, mediumTestArray) + " |";
+			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeTestString, 2, largeTestArray) + " |";
 			
-			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, bibleRussianString, 2) + " | ";
+			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, bibleRussianString, 2, bibleRussianArray) + " | ";
 		} else {
 			asciiRow += "n/a | ";
 			asciiRow += "n/a | ";
@@ -176,20 +193,28 @@ allAssoc({
 	await runTest("FastestSmallestTextEncoderDecoder", "| FastestSmallestTextEncoderDecoder |");
 	await runTest("nativeImplementation", "| <i>Native</i> |");
 	
-	console.log("\n\n" + asciiSnippet + "\n\n" + tableSnippet + "\n\n" + russianBibleSnippet);
+	const parseInt = window.parseInt;
+	function reduceSortTable(sum, acc) {
+		return sum + parseInt(acc,10);
+	}
+	function sortStringTable(asciiSnippet) {
+		var rows = asciiSnippet.split("\n");
+		var result = rows.shift() + "\n" + rows.shift() + "\n";
+		rows.sort(function(a,b) {
+			return (b.match(/\d+(?= KB)/g) || []).reduce(reduceSortTable, 0) - (a.match(/\d+(?= KB)/g) || []).reduce(reduceSortTable, 0);
+		});
+		return result + rows.join("\n");
+	}
+	
+	console.log("\n\n" + sortStringTable(asciiSnippet) + "\n\n" + sortStringTable(tableSnippet) + "\n\n" + sortStringTable(russianBibleSnippet));
 }, function(err) {
 	console.error(err);
 });
 
 function benchmarkSmall(f, v) {
-	void f( v ); // warm up
+	void f(v); void f(v); void f(v); void f(v); // warm up
 	
 	var S0 = performance.now();
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
@@ -199,19 +224,9 @@ function benchmarkSmall(f, v) {
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
 	var E1 = performance.now();
 	
 	var S2 = performance.now();
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
@@ -221,18 +236,13 @@ function benchmarkSmall(f, v) {
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
 	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
-	void f(v); void f(v); void f(v); void f(v); 
 	var E3 = performance.now();
 	
 	// Finally, return the mean of the 2 middle perfs
 	var T0 = E0 - S0, T1 = E1 - S1, T2 = E2 - S2, T3 = E3 - S3;
 	var min = Math_min(T0, T1, T2, T3);
 	var max = Math_max(T0, T1, T2, T3);
-	return (T0 + T1 + T2 + T3 - max - min) / 64; // 32 tests X 2
+	return (T0 + T1 + T2 + T3 - max - min) / 24; // 12 tests X 2
 }
 for (let i=0; i<30; i=i+1|0) void benchmarkSmall(Math.max, "" + i); // warm up
 
@@ -240,26 +250,26 @@ function benchmarkMedium(f, v) {
 	void f( v ); // warm up
 	
 	var S0 = performance.now();
-	void f(v); void f(v); void f(v); void f(v); void f(v);
+	void f(v); void f(v); void f(v); 
 	var E0 = performance.now();
 	
 	var S1 = performance.now();
-	void f(v); void f(v); void f(v); void f(v); void f(v);
+	void f(v); void f(v); void f(v);
 	var E1 = performance.now();
 	
 	var S2 = performance.now();
-	void f(v); void f(v); void f(v); void f(v); void f(v);
+	void f(v); void f(v); void f(v);
 	var E2 = performance.now();
 	
 	var S3 = performance.now();
-	void f(v); void f(v); void f(v); void f(v); void f(v);
+	void f(v); void f(v); void f(v);
 	var E3 = performance.now();
 	
 	// Finally, return the mean of the 2 middle perfs
 	var T0 = E0 - S0, T1 = E1 - S1, T2 = E2 - S2, T3 = E3 - S3;
 	var min = Math_min(T0, T1, T2, T3);
 	var max = Math_max(T0, T1, T2, T3);
-	return (T0 + T1 + T2 + T3 - max - min) / 10; // 5 tests X 2
+	return (T0 + T1 + T2 + T3 - max - min) / 6; // 3 tests X 2
 }
 for (let i=0; i<30; i=i+1|0) void benchmarkMedium(Math.min, "" + i); // warm up
 
