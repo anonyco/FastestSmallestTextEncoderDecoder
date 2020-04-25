@@ -30,7 +30,11 @@ The `nomodule` attribute prevents the script from being needlessly downloaded an
 
 ## EncodeInto
 
-See the [MDN here](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder/encodeInto) for documentation. For the TextEncoder.prototype.encodeInto polyfill, please use `https://dl.dropboxusercontent.com/s/i2e2rho1ohtbhfg/EncoderDecoderTogether.min.js?dl=0` for the full package, `https://dl.dropboxusercontent.com/s/nlcgzbr0ayd5pjs/FastestTextEncoderPolyfill.min.js?dl=0` for only TextEncoder and TextEncoder.prototype.encodeInto, and `npm i fastestsmallesttextencoderdecoder-encodeinto` for NodeJS, es6 modules, RequireJS, AngularJS, or whatever it is that floats your boat. The [encodeInto](https://raw.githubusercontent.com/anonyco/FastestSmallestTextEncoderDecoder/master/encodeInto/) folder of this repository contains the auto-generated encodeInto build of the main project.
+See the [MDN here](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder/encodeInto) for documentation. For the TextEncoder.prototype.encodeInto polyfill, please use `https://dl.dropboxusercontent.com/s/i2e2rho1ohtbhfg/EncoderDecoderTogether.min.js?dl=0` for the full package, `https://dl.dropboxusercontent.com/s/nlcgzbr0ayd5pjs/FastestTextEncoderPolyfill.min.js?dl=0` for only TextEncoder and TextEncoder.prototype.encodeInto, and `npm i fastestsmallesttextencoderdecoder-encodeinto` for NodeJS, es6 modules, RequireJS, AngularJS, or whatever it is that floats your boat. The [encodeInto](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/tree/master/encodeInto) folder of this repository contains the auto-generated encodeInto build of the main project. The npm project is [fastestsmallesttextencoderdecoder-encodeinto](https://www.npmjs.com/package/fastestsmallesttextencoderdecoder-encodeinto):
+
+```
+npm install fastestsmallesttextencoderdecoder-encodeinto
+```
 
 ## RequireJS and NodeJS
 
@@ -63,46 +67,43 @@ npm install fastestsmallesttextencoderdecoder
 Then, add `import 'fastestsmallesttextencoderdecoder';` to the polyfills.ts file. 
 
 ## Benchmarks
-Don't take my word that FastestSmallestTextEncoderDecoder is the fastest. Instead, check out the benchmarks below. You can run your own benchmarks by cloning this repo and running `npm run benchmark`, but beware that you need a beefy computer with 20GB of free RAM, as the NodeJS garbage collector is practically disabled via `--noconcurrent_sweeping` so that it does not interfer with the timing of the tests.
+Don't take my word that FastestSmallestTextEncoderDecoder is the fastest. Instead, check out the benchmarks below. You can run your own benchmarks by cloning this repo and running `npm run benchmark`, but beware that you need a beefy computer with plenty of free RAM, as the NodeJS garbage collector is disabled via `--noconcurrent_sweeping --nouse-idle-notification` so that it does not interfer with the timing of the tests (the GC is runned manually via `global.gc(true)` at the conclusion of the tests).
 
-The tests below were performed on an ascii file.
-
-| Library | Decode 32 bytes | Decode 32768 | Decode 16777216 | Encode 32 bytes | Encode 32768 | Encode 16777216 |
-| ------- | --------------- | ------------ | --------------- | --------------- | ------------ | --------------- |
-| [fast-text-encoding](https://github.com/samthor/fast-text-encoding) | 47792 Kb/sec | 65870 Kb/sec | 89018 Kb/sec | 11197 Kb/sec | 20105 Kb/sec | 29248 Kb/sec |
-| [text-encoding](https://github.com/inexorabletash/text-encoding)) | 5456 Kb/sec | 6290 Kb/sec | 7569 Kb/sec | 5731 Kb/sec | 4842 Kb/sec | 7361 Kb/sec |
-| [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) | 5577 Kb/sec | 5205 Kb/sec | 6232 Kb/sec | 8557 Kb/sec | 7469 Kb/sec | 12518 Kb/sec |
-| [TextEncoderLite](https://github.com/solderjs/TextEncoderLite) | 20563 Kb/sec | 24377 Kb/sec | 13708 Kb/sec | 10599 Kb/sec | 8225 Kb/sec | 12718 Kb/sec |
-| [text-encoding-shim](https://gitlab.com/PseudoPsycho/text-encoding-shim) | 14791 Kb/sec | 17272 Kb/sec | 27324 Kb/sec | 7203 Kb/sec | 9243 Kb/sec | 15112 Kb/sec |
-| FastestSmallestTextEncoderDecoder | 48714 Kb/sec | 83601 Kb/sec | 149612 Kb/sec | 14060 Kb/sec | 21391 Kb/sec | 31692 Kb/sec |
-| <i>Native</i> | 22584 Kb/sec | 841778 Kb/sec | 862736 Kb/sec | 18169 Kb/sec | 26682 Kb/sec | 36591 Kb/sec |
-
-The tests below were performed on a mixed ascii-utf8 file.
+The tests below were performed on an ascii file. To ensure consistancy, all test results are the mean of the IQR of many many trials.
 
 | Library | Decode 32 bytes | Decode 32768 | Decode 16777216 | Encode 32 bytes | Encode 32768 | Encode 16777216 |
 | ------- | --------------- | ------------ | --------------- | --------------- | ------------ | --------------- |
-| [fast-text-encoding](https://github.com/samthor/fast-text-encoding) | 34694 Kb/sec | 62305 Kb/sec | 90462 Kb/sec | 10175 Kb/sec | 18690 Kb/sec | 29335 Kb/sec |
-| [text-encoding](https://github.com/inexorabletash/text-encoding)) | 4860 Kb/sec | 5941 Kb/sec | 7878 Kb/sec | 6222 Kb/sec | 3958 Kb/sec | 7666 Kb/sec |
-| [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) | 4639 Kb/sec | 3678 Kb/sec | 5418 Kb/sec | 8741 Kb/sec | 6811 Kb/sec | 12253 Kb/sec |
-| [TextEncoderLite](https://github.com/solderjs/TextEncoderLite) | 8999 Kb/sec | 10227 Kb/sec | 10112 Kb/sec | 10868 Kb/sec | 7457 Kb/sec | 12790 Kb/sec |
-| [text-encoding-shim](https://gitlab.com/PseudoPsycho/text-encoding-shim) | 14081 Kb/sec | 14852 Kb/sec | 23365 Kb/sec | 6699 Kb/sec | 8255 Kb/sec | 15838 Kb/sec |
-| FastestSmallestTextEncoderDecoder | 47975 Kb/sec | 71299 Kb/sec | 131499 Kb/sec | 14427 Kb/sec | 21483 Kb/sec | 31780 Kb/sec |
-| <i>Native</i> | 24853 Kb/sec | 353511 Kb/sec | 521529 Kb/sec | 18637 Kb/sec | 26570 Kb/sec | 36828 Kb/sec |
+| [fast-text-encoding](https://github.com/samthor/fast-text-encoding) | 44247 Kb/sec | 73765 Kb/sec | 99360 Kb/sec | 11135 Kb/sec | 20393 Kb/sec | 27898 Kb/sec |
+| [text-encoding](https://github.com/inexorabletash/text-encoding)) | 5483 Kb/sec | 6718 Kb/sec | 7982 Kb/sec | 6001 Kb/sec | 5198 Kb/sec | 7950 Kb/sec |
+| [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) | 5989 Kb/sec | 5240 Kb/sec | 6376 Kb/sec | 8608 Kb/sec | 7815 Kb/sec | 12733 Kb/sec |
+| [TextEncoderLite](https://github.com/solderjs/TextEncoderLite) | 19731 Kb/sec | 24746 Kb/sec | 13843 Kb/sec | 10357 Kb/sec | 8690 Kb/sec | 13093 Kb/sec |
+| [text-encoding-shim](https://gitlab.com/PseudoPsycho/text-encoding-shim) | 15415 Kb/sec | 17477 Kb/sec | 26779 Kb/sec | 6692 Kb/sec | 9431 Kb/sec | 15477 Kb/sec |
+| FastestSmallestTextEncoderDecoder | 48268 Kb/sec | 106573 Kb/sec | 193986 Kb/sec | 14203 Kb/sec | 21734 Kb/sec | 31994 Kb/sec |
+| <i>Native</i> | 20248 Kb/sec | 895592 Kb/sec | 886559 Kb/sec | 17925 Kb/sec | 26714 Kb/sec | 36302 Kb/sec |
 
+Needless to say, FastestSmallestTextEncoderDecoder outperformed every other polyfill out there. Infact, it is so fast that it outperformed the native implementation on a set of 32 ascii bytes. The tests below were performed on a mixed ascii-utf8 file.
 
-For a more accurate real world test, we'll examine the *1876 The Russian Synodal Bible.txt*. It's a whoping 4.4MB rat's-nest of complex Russian UTF-8, sure to give any encoder/decoder a bad day. Let's see how they perform at their worst.
+| Library | Decode 32 bytes | Decode 32768 | Decode 16777216 | Encode 32 bytes | Encode 32768 | Encode 16777216 |
+| ------- | --------------- | ------------ | --------------- | --------------- | ------------ | --------------- |
+| [fast-text-encoding](https://github.com/samthor/fast-text-encoding) | 39218 Kb/sec | 65368 Kb/sec | 93653 Kb/sec | 12144 Kb/sec | 20309 Kb/sec | 29522 Kb/sec |
+| [text-encoding](https://github.com/inexorabletash/text-encoding)) | 4931 Kb/sec | 6405 Kb/sec | 8323 Kb/sec | 6906 Kb/sec | 4352 Kb/sec | 8077 Kb/sec |
+| [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) | 7675 Kb/sec | 5423 Kb/sec | 7264 Kb/sec | 8946 Kb/sec | 6816 Kb/sec | 12716 Kb/sec |
+| [TextEncoderLite](https://github.com/solderjs/TextEncoderLite) | 9034 Kb/sec | 10380 Kb/sec | 10372 Kb/sec | 10771 Kb/sec | 7452 Kb/sec | 12727 Kb/sec |
+| [text-encoding-shim](https://gitlab.com/PseudoPsycho/text-encoding-shim) | 13735 Kb/sec | 14886 Kb/sec | 24207 Kb/sec | 7634 Kb/sec | 9097 Kb/sec | 15349 Kb/sec |
+| FastestSmallestTextEncoderDecoder | 42538 Kb/sec | 65701 Kb/sec | 118350 Kb/sec | 14834 Kb/sec | 21717 Kb/sec | 31811 Kb/sec |
+| <i>Native</i> | 23929 Kb/sec | 364062 Kb/sec | 512951 Kb/sec | 19296 Kb/sec | 26902 Kb/sec | 37260 Kb/sec |
 
+Suprisingly, FastestSmallestTextEncoderDecoded once again beats the native implementation by a wide margin on a set of 32 characters. In the next test, let's examine a more real world example&mdash;the [1876 The Russian Synodal Bible.txt](https://github.com/anonyco/FastestSmallestTextEncoderDecoder/blob/master/test/1876%20The%20Russian%20Synodal%20Bible.txt). It's a whoping 4.4MB rat's-nest of complex Russian UTF-8, sure to give any encoder/decoder a bad day. Let's see how they perform at their worst.
 
 | Library | Decode Russian Bible | Encode Russian Bible |
 | ------- | -------------------- | -------------------- |
-| [fast-text-encoding](https://github.com/samthor/fast-text-encoding) | 93371 Kb/sec | 33357 Kb/sec | 
-| [text-encoding](https://github.com/inexorabletash/text-encoding)) | 7396 Kb/sec | 8386 Kb/sec | 
-| [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) | 4368 Kb/sec | 13050 Kb/sec | 
-| [TextEncoderLite](https://github.com/solderjs/TextEncoderLite) | 15828 Kb/sec | 12953 Kb/sec | 
-| [text-encoding-shim](https://gitlab.com/PseudoPsycho/text-encoding-shim) | 29189 Kb/sec | 17155 Kb/sec | 
-| FastestSmallestTextEncoderDecoder | 148384 Kb/sec | 35537 Kb/sec | 
-| <i>Native</i> | 893880 Kb/sec | 40933 Kb/sec | 
-
+| [fast-text-encoding](https://github.com/samthor/fast-text-encoding) | 93174 Kb/sec | 34207 Kb/sec | 
+| [text-encoding](https://github.com/inexorabletash/text-encoding)) | 8120 Kb/sec | 8026 Kb/sec | 
+| [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) | 6102 Kb/sec | 12512 Kb/sec | 
+| [TextEncoderLite](https://github.com/solderjs/TextEncoderLite) | 15564 Kb/sec | 12650 Kb/sec | 
+| [text-encoding-shim](https://gitlab.com/PseudoPsycho/text-encoding-shim) | 28146 Kb/sec | 17437 Kb/sec | 
+| FastestSmallestTextEncoderDecoder | 106154 Kb/sec | 35684 Kb/sec | 
+| <i>Native</i> | 870569 Kb/sec | 43547 Kb/sec |
 
 
 ## Browser Support

@@ -1,6 +1,6 @@
 {
 	"name": "fastestsmallesttextencoderdecoder",
-	"version": "1.0.19",
+	"version": "1.0.20",
 	"description": "The fastest smallest Javascript polyfill for the encode of TextEncoder and decode of TextDecoder for UTF-8 only. Made by AnonyCo with ❤️ from 🐕s.",
 	"keywords": [
 		"utf-8",

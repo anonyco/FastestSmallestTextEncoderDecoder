@@ -21,7 +21,7 @@ var ENCODEINTO_BUILD = false;
 	var GlobalTextEncoder = window["TextEncoder"];
 	var decoderRegexp = /[\xc0-\xff][\x80-\xbf]+|[\x80-\xff]/g;
 	var encoderRegexp = /[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g;
-	var tmpBufferU8 = new (NativeUint8Array ? Uint16Array : patchedU8Array)(32768);
+	var tmpBufferU16 = new (NativeUint8Array ? Uint16Array : patchedU8Array)(8192);
 	var globalTextEncoderPrototype;
 	var globalTextEncoderInstance;
 	
@@ -40,7 +40,7 @@ var ENCODEINTO_BUILD = false;
 				break;
 			case 15:
 				if ((cp0 >>> 3) === 30) {
-					codePoint = ((cp0 & 0x07) << 18) | ((encoded.charCodeAt(1) & 0x3F) << 12) | ((encoded.charCodeAt(2) & 0x3F) << 6) | encoded.charCodeAt(3);
+					codePoint = ((cp0 & 0x07) << 18) | ((encoded.charCodeAt(1) & 0x3F) << 12) | ((encoded.charCodeAt(2) & 0x3F) << 6) | (encoded.charCodeAt(3) & 0x3F);
 					i = codePoint < 0x10000 ? 0 : 4;
 				}
 		}
@@ -69,20 +69,20 @@ var ENCODEINTO_BUILD = false;
 			asObjectString = Object_prototype_toString.call(inputAs8);
 			if (asObjectString !== arrayBufferString && asObjectString !== sharedArrayBufferString && asObjectString !== undefinedObjectString)
 				throw TypeError("Failed to execute 'decode' on 'TextDecoder': The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
-			inputAs8 = NativeUint8Array ? new patchedU8Array(inputAs8) : inputAs8;
+			inputAs8 = NativeUint8Array ? new patchedU8Array(inputAs8) : inputAs8 || [];
 		}
 		
 		var resultingString="", index=0, len=inputAs8.length|0, nextStop=0, cp0=0, codePoint=0, mask=0b11111, shift=0, minBits=0, cp1=0, pos=0, tmp=0, result="";
 		// Note that tmp represents the 2nd half of a surrogate pair incase a surrogate gets divided between blocks
 		for (; index < len; ) {
-			for (; index < len && pos < 32768; index=index+1|0, pos=pos+1|0) {
+			for (; index < len && pos < 8192; index=index+1|0, pos=pos+1|0) {
 				cp0 = inputAs8[index] & 0xff;
 				switch(cp0 >>> 4) {
 					case 15:
 						mask >>>= 1;
 						cp1 = inputAs8[index=index+1|0] & 0xff;
 						codePoint = cp1 & 0b00111111;
-						minBits = (cp1 >>> 6) === 0b10 && 0b11110111 < cp0 ? 5 : 20; // 20 ensures it never passes -> all invalid replacements
+						minBits = (cp1 >>> 6) === 0b10 && cp0 < 0b11111000 ? 5 : 20; // 20 ensures it never passes -> all invalid replacements
 						shift = 6;
 					case 14:
 						mask >>>= 1;
@@ -102,14 +102,15 @@ var ENCODEINTO_BUILD = false;
 						// Now, process the code point
 						codePoint |= (cp0 & mask) << shift;
 						if (index < len && (codePoint >>> minBits) && codePoint < 0x110000) {
+							cp0 = codePoint;
 							if (0xffff < codePoint) { // BMP code point
-								codePoint = codePoint - 0x10080|0;//- 0x10000|0;
+								codePoint = codePoint - 0x10000|0;
 								
 								tmp = (codePoint >>> 10) + 0xD800|0,  // highSurrogate
 								cp0 = (codePoint & 0x3ff) + 0xDC00|0 // lowSurrogate (will be inserted later in the switch-statement)
 								
-								if (pos < 32767) { // notice 32767 instead of 32768
-									tmpBufferU8[pos] = tmp;
+								if (pos < 8191) { // notice 8191 instead of 8192
+									tmpBufferU16[pos] = tmp;
 									pos = pos + 1|0;
 									tmp = -1;
 								}  else {// else, we are at the end of the inputAs8 and let tmp0 be filled in later on
@@ -118,12 +119,11 @@ var ENCODEINTO_BUILD = false;
 									tmp = cp0;
 									cp0 = cp1;
 								}
-							} else cp0 = codePoint;
-							codePoint = -1; // prevent next statement in switch from resetting it to the null replacement character
+							}
 						} else {
 							// invalid code point means replacing the whole thing with null replacement characters
 							index = index - (shift/6|0) |0;
-							codePoint = 0; // ensure null replacement character
+							cp0 = 0xfffd;
 						}
 						
 						
@@ -131,11 +131,12 @@ var ENCODEINTO_BUILD = false;
 						mask = 0b11111;
 						shift = 0;
 						minBits = 0;
-					case 11:
+						codePoint = 0;
+					/*case 11:
 					case 10:
 					case 9:
 					case 8:
-						codePoint ? codePoint = 0 : cp0 = 0xfffd; // fill with invalid replacement character
+						codePoint ? codePoint = 0 : cp0 = 0xfffd; // fill with invalid replacement character*/
 					case 7:
 					case 6:
 					case 5:
@@ -144,11 +145,17 @@ var ENCODEINTO_BUILD = false;
 					case 2:
 					case 1:
 					case 0:
-						tmpBufferU8[pos] = cp0;
+						tmpBufferU16[pos] = cp0;
+						continue;
+					case 8:
+					case 9:
+					case 10:
+					case 11:
+						tmpBufferU16[pos] = 0xfffd; // fill with invalid replacement character
 				}
 			}
-			resultingString += fromCharCode.apply(null, pos === 32768 ? tmpBufferU8 : tmpBufferU8[NativeUint8Array ? "subarray" : "slice"](0,pos));
-			tmpBufferU8[0] = tmp;
+			resultingString += fromCharCode.apply(null, pos === 2048 ? tmpBufferU16 : NativeUint8Array ?  tmpBufferU16.subarray(0,pos) : tmpBufferU16.slice(0,pos));
+			tmpBufferU16[0] = tmp;
 			pos = tmp !== -1 ? 1 : 0;
 			tmp = -1;
 		}

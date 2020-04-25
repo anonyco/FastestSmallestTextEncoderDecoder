@@ -120,15 +120,15 @@ allAssoc({
 		var russianRow = tableStart;
 		
 		if (encodeAndDecode.decode) {
-			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallAsciiArray, 384) + " |";
+			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallAsciiArray, 192) + " |";
 			asciiRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.decode, mediumAsciiArray, 36) + " |";
-			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeAsciiArray, 1) + " |";
+			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeAsciiArray, 2) + " |";
 			
-			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallTestArray, 384) + " |";
+			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.decode, smallTestArray, 192) + " |";
 			resultRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.decode, mediumTestArray, 36) + " |";
-			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeTestArray, 1) + " |";
+			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, largeTestArray, 2) + " |";
 			
-			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, bibleRussianArray, 1) + " |";
+			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.decode, bibleRussianArray, 2) + " |";
 		} else {
 			asciiRow += "n/a | ";
 			asciiRow += "n/a | ";
@@ -142,15 +142,15 @@ allAssoc({
 		}
 		
 		if (encodeAndDecode.encode) {
-			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallAsciiString, 384) + " |";
+			asciiRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallAsciiString, 192) + " |";
 			asciiRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.encode, mediumAsciiString, 36) + " |";
-			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeAsciiString, 1) + " |";
+			asciiRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeAsciiString, 2) + " |";
 			
-			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallTestString, 384) + " |";
+			resultRow += await averageTimeUnit(benchmarkSmall, encodeAndDecode.encode, smallTestString, 192) + " |";
 			resultRow += await averageTimeUnit(benchmarkMedium, encodeAndDecode.encode, mediumTestString, 36) + " |";
-			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeTestString, 1) + " |";
+			resultRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, largeTestString, 2) + " |";
 			
-			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, bibleRussianString, 1) + " | ";
+			russianRow += await averageTimeUnit(benchmarkLarge, encodeAndDecode.encode, bibleRussianString, 2) + " | ";
 		} else {
 			asciiRow += "n/a | ";
 			asciiRow += "n/a | ";
