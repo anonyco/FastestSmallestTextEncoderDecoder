@@ -277,6 +277,9 @@ proto.group = function(groupName) {
 };
 
 const JSON_stringify = JSON.stringify;
+const betterStringify = function(input) {
+	return JSON_stringify(input instanceof ArrayBuffer ? new Uint8Array(input.buffer || input) : input);
+};
 const Object_freeze = Object.freeze;
 const ArrayBuffer = global.ArrayBuffer;
 const Buffer_compare = Buffer.compare;
@@ -350,8 +353,8 @@ proto.runTest = function(testName) {
 			if (errored) console.warn(realValue);
 			handle.resultsByGroup[groupId].push( '\x1b[91m\u2717 !ERR!\x1b[0m' );
 			handle.errorLog += "\nMethod " + handle.Method + " in " + handle.source + " failed " + testName + " (on " + groupName + "):\n" +
-								"    Expected: " + JSON_stringify(expected) + "\n" +
-								"    Got:      " + JSON_stringify(realValue);
+								"    Expected: " + betterStringify(expected) + "\n" +
+								"    Got:      " + betterStringify(realValue);
 		}
 	}
 	

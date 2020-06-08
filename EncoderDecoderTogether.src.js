@@ -183,25 +183,28 @@ var ENCODEINTO_BUILD = false;
 
 		return resultingString;
 	}
-	if (!window["TextDecoder"]) window["TextDecoder"] = TextDecoder;
 	//////////////////////////////////////////////////////////////////////////////////////
 	function encoderReplacer(nonAsciiChars){
 		// make the UTF string into a binary UTF-8 encoded string
 		var point = nonAsciiChars.charCodeAt(0)|0;
-		if (0xD800 <= point && point <= 0xDBFF) {
-			var nextcode = nonAsciiChars.charCodeAt(1)|0; // defaults to 0 when NaN, causing null replacement character
-			
-			if (0xDC00 <= nextcode && nextcode <= 0xDFFF) {
-				//point = ((point - 0xD800)<<10) + nextcode - 0xDC00 + 0x10000|0;
-				point = (point<<10) + nextcode - 0x35fdc00|0;
-				if (point > 0xffff)
-					return fromCharCode(
-						(0x1e/*0b11110*/<<3) | (point>>18),
-						(0x2/*0b10*/<<6) | ((point>>12)&0x3f/*0b00111111*/),
-						(0x2/*0b10*/<<6) | ((point>>6)&0x3f/*0b00111111*/),
-						(0x2/*0b10*/<<6) | (point&0x3f/*0b00111111*/)
-					);
-			} else point = 65533/*0b1111111111111101*/;//return '\xEF\xBF\xBD';//fromCharCode(0xef, 0xbf, 0xbd);
+		if (0xD800 <= point) {
+			if (point <= 0xDBFF) {
+				var nextcode = nonAsciiChars.charCodeAt(1)|0; // defaults to 0 when NaN, causing null replacement character
+				
+				if (0xDC00 <= nextcode && nextcode <= 0xDFFF) {
+					//point = ((point - 0xD800)<<10) + nextcode - 0xDC00 + 0x10000|0;
+					point = (point<<10) + nextcode - 0x35fdc00|0;
+					if (point > 0xffff)
+						return fromCharCode(
+							(0x1e/*0b11110*/<<3) | (point>>18),
+							(0x2/*0b10*/<<6) | ((point>>12)&0x3f/*0b00111111*/),
+							(0x2/*0b10*/<<6) | ((point>>6)&0x3f/*0b00111111*/),
+							(0x2/*0b10*/<<6) | (point&0x3f/*0b00111111*/)
+						);
+				} else point = 65533/*0b1111111111111101*/;//return '\xEF\xBF\xBD';//fromCharCode(0xef, 0xbf, 0xbd);
+			} else if (point <= 0xDFFF) {
+				point = 65533/*0b1111111111111101*/;//return '\xEF\xBF\xBD';//fromCharCode(0xef, 0xbf, 0xbd);
+			}
 		}
 		/*if (point <= 0x007f) return nonAsciiChars;
 		else */if (point <= 0x07ff) {
@@ -217,7 +220,7 @@ var ENCODEINTO_BUILD = false;
 		// 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
 		// 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
 		var encodedString = inputString === void 0 ? "" : ("" + inputString), len=encodedString.length|0;
-		var result=new patchedU8Array((len << 1) + 9|0), tmpResult;
+		var result=new patchedU8Array((len << 1) + 8|0), tmpResult;
 		var i=0, pos=0, point=0, nextcode=0;
 		var upgradededArraySize=!NativeUint8Array; // normal arrays are auto-expanding
 		for (i=0; i<len; i=i+1|0, pos=pos+1|0) {
@@ -228,25 +231,34 @@ var ENCODEINTO_BUILD = false;
 				result[pos] = (0x6<<5)|(point>>6);
 				result[pos=pos+1|0] = (0x2<<6)|(point&0x3f);
 			} else {
-				if (0xD800 <= point && point <= 0xDBFF) {
-					nextcode = encodedString.charCodeAt(i=i+1|0)|0; // defaults to 0 when NaN, causing null replacement character
-					
-					if (0xDC00 <= nextcode && nextcode <= 0xDFFF) {
-						//point = ((point - 0xD800)<<10) + nextcode - 0xDC00 + 0x10000|0;
-						point = (point<<10) + nextcode - 0x35fdc00|0;
-						if (point > 0xffff) {
-							result[pos] = (0x1e/*0b11110*/<<3) | (point>>18);
-							result[pos=pos+1|0] = (0x2/*0b10*/<<6) | ((point>>12)&0x3f/*0b00111111*/);
-							result[pos=pos+1|0] = (0x2/*0b10*/<<6) | ((point>>6)&0x3f/*0b00111111*/);
-							result[pos=pos+1|0] = (0x2/*0b10*/<<6) | (point&0x3f/*0b00111111*/);
-							continue;
+				widenCheck: {
+					if (0xD800 <= point) {
+						if (point <= 0xDBFF) {
+							nextcode = encodedString.charCodeAt(i=i+1|0)|0; // defaults to 0 when NaN, causing null replacement character
+							
+							if (0xDC00 <= nextcode && nextcode <= 0xDFFF) {
+								//point = ((point - 0xD800)<<10) + nextcode - 0xDC00 + 0x10000|0;
+								point = (point<<10) + nextcode - 0x35fdc00|0;
+								if (point > 0xffff) {
+									result[pos] = (0x1e/*0b11110*/<<3) | (point>>18);
+									result[pos=pos+1|0] = (0x2/*0b10*/<<6) | ((point>>12)&0x3f/*0b00111111*/);
+									result[pos=pos+1|0] = (0x2/*0b10*/<<6) | ((point>>6)&0x3f/*0b00111111*/);
+									result[pos=pos+1|0] = (0x2/*0b10*/<<6) | (point&0x3f/*0b00111111*/);
+									continue;
+								}
+								break widenCheck;
+							}
+							point = 65533/*0b1111111111111101*/;//return '\xEF\xBF\xBD';//fromCharCode(0xef, 0xbf, 0xbd);
+						} else if (point <= 0xDFFF) {
+							point = 65533/*0b1111111111111101*/;//return '\xEF\xBF\xBD';//fromCharCode(0xef, 0xbf, 0xbd);
 						}
-					} else point = 65533/*0b1111111111111101*/;//return '\xEF\xBF\xBD';//fromCharCode(0xef, 0xbf, 0xbd);
-				} else if (!upgradededArraySize && (i << 1) < pos && (i << 1) < (pos - 9|0)) {
-					upgradededArraySize = true;
-					tmpResult = new patchedU8Array(len * 3);
-					tmpResult.set( result );
-					result = tmpResult;
+					}
+					if (!upgradededArraySize && (i << 1) < pos && (i << 1) < (pos - 7|0)) {
+						upgradededArraySize = true;
+						tmpResult = new patchedU8Array(len * 3);
+						tmpResult.set( result );
+						result = tmpResult;
+					}
 				}
 				result[pos] = (0xe/*0b1110*/<<4) | (point>>12);
 				result[pos=pos+1|0] =(0x2/*0b10*/<<6) | ((point>>6)&0x3f/*0b00111111*/);
@@ -259,46 +271,48 @@ var ENCODEINTO_BUILD = false;
 		var encodedString = inputString === void 0 ?  "" : ("" + inputString).replace(encoderRegexp, encoderReplacer);
 		var len=encodedString.length|0, i=0, char=0, read=0, u8ArrLen = u8Arr.length|0, inputLength=inputString.length|0;
 		if (u8ArrLen < len) len=u8ArrLen;
-		putChars: for (; i<len; i=i+1|0) {
-			char = encodedString.charCodeAt(i) |0;
-			switch(char >> 4) {
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-					read = read + 1|0;
-					// extension points:
-				case 8:
-				case 9:
-				case 10:
-				case 11:
-					break;
-				case 12:
-				case 13:
-					if ((i+1|0) < u8ArrLen) {
+		putChars: {
+			for (; i<len; i=i+1|0) {
+				char = encodedString.charCodeAt(i) |0;
+				switch(char >> 4) {
+					case 0:
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+					case 5:
+					case 6:
+					case 7:
 						read = read + 1|0;
+						// extension points:
+					case 8:
+					case 9:
+					case 10:
+					case 11:
 						break;
-					}
-				case 14:
-					if ((i+2|0) < u8ArrLen) {
-						//if (!(char === 0xEF && encodedString.substr(i+1|0,2) === "\xBF\xBD"))
-						read = read + 1|0;
-						break;
-					}
-				case 15:
-					if ((i+3|0) < u8ArrLen) {
-						read = read + 1|0;
-						break;
-					}
-				default:
-					break putChars;
+					case 12:
+					case 13:
+						if ((i+1|0) < u8ArrLen) {
+							read = read + 1|0;
+							break;
+						}
+					case 14:
+						if ((i+2|0) < u8ArrLen) {
+							//if (!(char === 0xEF && encodedString.substr(i+1|0,2) === "\xBF\xBD"))
+							read = read + 1|0;
+							break;
+						}
+					case 15:
+						if ((i+3|0) < u8ArrLen) {
+							read = read + 1|0;
+							break;
+						}
+					default:
+						break putChars;
+				}
+				//read = read + ((char >> 6) !== 2) |0;
+				u8Arr[i] = char;
 			}
-			//read = read + ((char >> 6) !== 2) |0;
-			u8Arr[i] = char;
 		}
 		return {"written": i, "read": inputLength < read ? inputLength : read};
 		// 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
@@ -375,19 +389,23 @@ var ENCODEINTO_BUILD = false;
 				if (0xD800 <= point && point <= 0xDBFF) {
 					nextcode = encodedString.charCodeAt(read = read + 1|0)|0; // defaults to 0 when NaN, causing null replacement character
 					
-					if (0xDC00 <= nextcode && nextcode <= 0xDFFF) {
-						read = read + 1|0;
-						//point = ((point - 0xD800)<<10) + nextcode - 0xDC00 + 0x10000|0;
-						point = (point<<10) + nextcode - 0x35fdc00|0;
-						if (point > 0xffff) {
-							u8LenLeft = u8LenLeft - 4|0;
-							if (0 <= u8LenLeft) {
-								u8Arr[i=i+1|0] = (0x1e<<3) | (point>>18);
-								u8Arr[i=i+1|0] = (0x2<<6) | ((point>>12)&0x3f);
-								u8Arr[i=i+1|0] = (0x2<<6) | ((point>>6)&0x3f);
-								u8Arr[i=i+1|0] = (0x2<<6) | (point&0x3f);
+					if (0xDC00 <= nextcode) {
+						if (nextcode <= 0xDFFF) {
+							read = read + 1|0;
+							//point = ((point - 0xD800)<<10) + nextcode - 0xDC00 + 0x10000|0;
+							point = (point<<10) + nextcode - 0x35fdc00|0;
+							if (point > 0xffff) {
+								u8LenLeft = u8LenLeft - 4|0;
+								if (0 <= u8LenLeft) {
+									u8Arr[i=i+1|0] = (0x1e<<3) | (point>>18);
+									u8Arr[i=i+1|0] = (0x2<<6) | ((point>>12)&0x3f);
+									u8Arr[i=i+1|0] = (0x2<<6) | ((point>>6)&0x3f);
+									u8Arr[i=i+1|0] = (0x2<<6) | (point&0x3f);
+								}
+								continue;
 							}
-							continue;
+						} else if (point <= 0xDFFF) {
+							point = 65533/*0b1111111111111101*\/;//return '\xEF\xBF\xBD';//fromCharCode(0xef, 0xbf, 0xbd);
 						}
 					} else if (nextcode === 0 && encodedLen <= read) {
 						break; // we have reached the end of the string
@@ -410,6 +428,7 @@ var ENCODEINTO_BUILD = false;
 	}
 	
 	if (!GlobalTextEncoder) {
+		window["TextDecoder"] = TextDecoder;
 		window["TextEncoder"] = TextEncoder;
 	} else if (ENCODEINTO_BUILD && !(globalTextEncoderPrototype = GlobalTextEncoder["prototype"])["encodeInto"]) {
 		globalTextEncoderInstance = new GlobalTextEncoder;
