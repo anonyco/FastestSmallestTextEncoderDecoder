@@ -81,7 +81,7 @@ The tests below were performed on an ascii file. To ensure consistancy, all test
 | [TextEncoderTextDecoder.js](https://gist.github.com/Yaffle/5458286) | 4469 KB/sec ✔ | 5956 KB/sec ✔ | 5626 KB/sec ✔ | 13576 KB/sec ✔ | 37667 KB/sec ✔ | 57916 KB/sec ✔ |
 | [text-encoding](https://github.com/inexorabletash/text-encoding) | 3084 KB/sec ✔ | 6762 KB/sec ✔ | 7925 KB/sec ✔ | 8621 KB/sec ✔ | 26699 KB/sec ✔ | 35755 KB/sec ✔ |
 
-Needless to say, FastestSmallestTextEncoderDecoder outperformed every other polyfill out there. Infact, it is so fast that it outperformed the native implementation on a set of 32 ascii bytes. The tests below were performed on a mixed ascii-utf8 file.
+Needless to say, FastestSmallestTextEncoderDecoder outperformed almost every other polyfill out there, with the only exception being fast-text-encoding outperforming fastestsmallesttextencoderdecoder on encoding extremely tiny strings. Infact, it is so fast that it outperformed the native implementation on a set of 32 ascii bytes. The tests below were performed on a mixed ascii-utf8 file.
 
 | Library | Decode 32 bytes | Decode 32768 | Decode 16777216 | Encode 32 bytes | Encode 32768 | Encode 16777216 |
 | ------- | --------------- | ------------ | --------------- | --------------- | ------------ | --------------- |
