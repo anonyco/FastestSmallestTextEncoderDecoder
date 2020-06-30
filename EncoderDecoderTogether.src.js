@@ -216,6 +216,15 @@ var ENCODEINTO_BUILD = false;
 		);
 	}
 	function TextEncoder(){};
+	try {
+		Object.defineProperty(TextEncoderPrototype, "encoding", {
+			get: function() {
+				return "utf-8";
+			}
+		});
+	} catch (e) {
+		TextEncoderPrototype.encoding = "utf-8";
+	}
 	TextEncoderPrototype["encode"] = function(inputString){
 		// 0xc0 => 0b11000000; 0xff => 0b11111111; 0xc0-0xff => 0b11xxxxxx
 		// 0x80 => 0b10000000; 0xbf => 0b10111111; 0x80-0xbf => 0b10xxxxxx
