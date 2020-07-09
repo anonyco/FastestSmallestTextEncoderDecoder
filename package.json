@@ -1,40 +1,16 @@
 {
 	"name": "fastestsmallesttextencoderdecoder-browser",
-	"version": "1.0.8",
-	"description": "The fastest smallest Javascript polyfill for the encode of TextEncoder and decode of TextDecoder for UTF-8 only. Made by AnonyCo with ❤️ from 🐕s.",
-	"keywords": ["utf-8","encoding","decoding","encoder","decoder","javascript","polyfill","js","utf8","compact","cross-browser","utf8-string","pure-javascript","nodejs","node-js","node-module","nodejs-modules","performance","tiny","small"],
+	"version": "1.0.9",
+	"description": "This package was published by accident. Please see [fastestsmallesttextencoderdecoder](https://www.npmjs.com/package/fastestsmallesttextencoderdecoder)",
+	"keywords": [],
 	"homepage": "https://github.com/anonyco/FastestSmallestTextEncoderDecoder#quick-start",
-	"bugs": {
-		"url": "https://github.com/anonyco/FastestSmallestTextEncoderDecoder/issues",
-		"email": "wowzeryest@gmail.com"
-	},
 	"scripts": {
-		"install-dev": "npm install; mkdir compiler-latest 2> /dev/null; wget -P ./compiler-latest/ 'https://dl.google.com/closure-compiler/compiler-latest.tar.gz'; unlink ./closure-compiler.jar 2> /dev/null; cd compiler-latest; tar xvzf compiler-latest.tar.gz; bash -c 'for j in closure-compiler-*; do mv -- \"$j\" \"../closure-compiler.jar\" 1> /dev/null; done' 1> /dev/null 2> /dev/null; cd ..; rm -rf compiler-latest 2> /dev/null",
-		"build": "npm run build-require; npm run build-module",
-		"build-require": "java -Xms32M -Xmx1024M -jar ./closure-compiler.jar --source_map_format V3 --js './NodeJS/EncoderAndDecoderNodeJS.src.js' --js_output_file ./NodeJS/EncoderAndDecoderNodeJS.min.js  --create_source_map ./NodeJS/EncoderAndDecoderNodeJS.min.js.map --compilation_level ADVANCED_OPTIMIZATIONS --output_wrapper '%output%//AnonyCo\n//# sourceMappingURL=EncoderAndDecoderNodeJS.min.js.map' --language_out ECMASCRIPT_2017",
-		"build-module": "java -Xms32M -Xmx1024M -jar ./closure-compiler.jar --source_map_format V3 --js './NodeJS/EncoderAndDecoderNodeJS.src.module.js' --js_output_file ./NodeJS/EncoderAndDecoderNodeJS.min.module.js  --create_source_map ./NodeJS/EncoderAndDecoderNodeJS.min.module.js.map --compilation_level ADVANCED_OPTIMIZATIONS --output_wrapper '%output%//AnonyCo\n//# sourceMappingURL=EncoderAndDecoderNodeJS.min.module.js.map' --language_out ECMASCRIPT_2017; sed -i -e 's/window\\.export_/export var /g' './NodeJS/EncoderAndDecoderNodeJS.min.module.js'",
-		"build-es6": "java -Xms32M -Xmx1024M -jar ./closure_compiler.jar --source_map_format V3 --js './NodeJS/EncoderAndDecoderNodeJS.src.module.js' --js_output_file ./NodeJS/EncoderAndDecoderNodeJS.min.module.js  --create_source_map ./NodeJS/EncoderAndDecoderNodeJS.min.module.js.map --compilation_level ADVANCED_OPTIMIZATIONS --output_wrapper '%output%//AnonyCo\n//# sourceMappingURL=EncoderAndDecoderNodeJS.min.module.js.map'  --language_out ECMASCRIPT_2017; sed -i -e 's/window\\.export_/export var /g' './NodeJS/EncoderAndDecoderNodeJS.min.module.js'"
+		"prepublishOnly": "npm deprecate fastestsmallesttextencoderdecoder-browser 'This package was published by accident. Please see [fastestsmallesttextencoderdecoder](https://www.npmjs.com/package/fastestsmallesttextencoderdecoder)' && npm owner add anonyco fastestsmallesttextencoderdecoder-browser && npm owner rm keithamus fastestsmallesttextencoderdecoder-browser"
 	},
-	"license": "Unlicense",
-	"author": {
-		"name": "Jack Giffin",
-		"email": "wowzeryest@gmail.com",
-		"url": "https://jackgiffin.com/"
-	},
-	"main": "NodeJS/EncoderAndDecoderNodeJS.min.js",
-	"module": "NodeJS/EncoderAndDecoderNodeJS.min.module.js",
-	"es2015": "NodeJS/EncoderAndDecoderNodeJS.min.module.js",
-	"browser": "EncoderDecoderTogether.min.js",
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/anonyco/FastestSmallestTextEncoderDecoder.git"
-	},
+	"license": "CC0-1.0",
 	"files": [
-		"EncoderDecoderTogether.min.js",
-		"EncoderDecoderTogether.src.js",
-		"NodeJS/EncoderAndDecoderNodeJS.min.js",
-		"NodeJS/EncoderAndDecoderNodeJS.min.js.map",
-		"NodeJS/EncoderAndDecoderNodeJS.min.module.js",
-		"NodeJS/EncoderAndDecoderNodeJS.min.module.js.map"
-	]
+		"README.md"
+	],
+	"publishConfig": { "registry": "https://registry.npmjs.org/" }
+
 }
