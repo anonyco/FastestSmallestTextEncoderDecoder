@@ -1,9 +1,0 @@
-# in case if you have installed node modules
-/node_modules
-
-# skip the utilities used to build this library
-/compiler-latest
-/closure-compiler.jar
-
-# just in case
-/.git
