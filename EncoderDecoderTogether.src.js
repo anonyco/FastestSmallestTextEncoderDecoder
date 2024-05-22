@@ -19,6 +19,7 @@ var ENCODEINTO_BUILD = false;
 	var window_parseInt = parseInt;
 	var TextEncoderPrototype = TextEncoder["prototype"];
 	var GlobalTextEncoder = window["TextEncoder"];
+	var GlobalTextDecoder = window["TextDecoder"];
 	var decoderRegexp = /[\xc0-\xff][\x80-\xbf]+|[\x80-\xff]/g;
 	var encoderRegexp = /[\x80-\uD7ff\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]?/g;
 	var tmpBufferU16 = new (NativeUint8Array ? Uint16Array : patchedU8Array)(32);
@@ -428,7 +429,6 @@ var ENCODEINTO_BUILD = false;
 	}
 	
 	if (!GlobalTextEncoder) {
-		window["TextDecoder"] = TextDecoder;
 		window["TextEncoder"] = TextEncoder;
 	} else if (ENCODEINTO_BUILD && !(globalTextEncoderPrototype = GlobalTextEncoder["prototype"])["encodeInto"]) {
 		globalTextEncoderInstance = new GlobalTextEncoder;
@@ -449,5 +449,9 @@ var ENCODEINTO_BUILD = false;
 			}
 			return polyfill_encodeInto(string, u8arr);
 		};
+	}
+
+	if (!GlobalTextDecoder) {
+		window["TextDecoder"] = TextDecoder;
 	}
 })(typeof global == "" + void 0 ? typeof self == "" + void 0 ? this : self : global);
